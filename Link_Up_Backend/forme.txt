@@ -1,0 +1,82 @@
+src/
+  utils/jwt.js              ← token helper functions
+  validators/auth.validator.js  ← input validation
+  middleware/auth.middleware.js  ← route protection
+  services/auth.service.js      ← business logic
+  controllers/auth.controller.js ← handle requests
+  routes/auth.routes.js          ← define endpoints
+
+phase 3
+  user sends email + password
+↓
+find user in DB
+↓
+compare bcrypt password
+↓
+generate JWT
+↓
+return token
+
+////////////
+read Authorization header
+↓
+verify JWT
+↓
+extract user id
+↓
+attach user to req.user
+↓
+call next()
+//////////////////
+Client sends: POST /auth/register
+  ↓
+Express parses JSON body (express.json middleware)
+  ↓
+Matches route → /auth/register → register controller
+  ↓
+Controller validates with Zod
+  ↓
+Calls registerUser service
+  ↓
+Service checks DB for duplicates
+  ↓
+Hashes password with bcrypt
+  ↓
+Saves user to PostgreSQL via Prisma
+  ↓
+Creates JWT with user ID
+  ↓
+Returns to controller
+  ↓
+Controller sends 201 response with token
+
+
+
+Client sends: GET /auth/me with Bearer token
+  ↓
+Express matches /auth/me
+  ↓
+authenticate middleware runs FIRST
+  ↓
+Extracts token from header
+  ↓
+Verifies JWT (is it valid? expired?)
+  ↓
+Finds user in DB by decoded userId
+  ↓
+Attaches user to req.user
+  ↓
+Calls next()
+  ↓
+getMe controller runs
+  ↓
+Sends req.user back as response
+
+/////////////
+Code	Meaning	When
+200	OK	Login success
+201	Created	Registration success
+400	Bad Request	Invalid input
+401	Unauthorized	Wrong credentials / no token
+409	Conflict	Email/username taken
+500	Server Error	Something broke
