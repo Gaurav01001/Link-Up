@@ -1,14 +1,15 @@
 const express = require("express")
 const cors = require("cors");
-
+const authRouters = require("./routes/auth.routes")
 const prisma = require("./config/prisma")
 const errorHandler = require("./middleware/error.middleware")
 const asyncHandler = require("./utils/asyncHandler")
 
-const app =express();
+const app = express();
 
 app.use(cors())
 app.use(express.json())
+app.use("/auth", authRouters)
 
 app.get("/", (req,res)=>{
     res.json({message: "Backend Active !!"})
@@ -24,12 +25,11 @@ app.get(
                 username: "tester" + Date.now(),
                 password: "12345",
             }
-
         })
         res.json(user);
     })
 )
 
-
 app.use(errorHandler)
+
 module.exports = app;

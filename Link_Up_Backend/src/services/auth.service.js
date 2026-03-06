@@ -32,6 +32,13 @@ const registerUser = async(data)=>{
             email,
             username,
             password: hashedPassword,
+        },
+        select:{
+            id: true,
+            email: true,
+            username: true,
+            name: true,
+            createdAt: true
         }
     })
     //generate twt tokens
