@@ -1,6 +1,5 @@
 const jwt = require("jsonwebtoken")
 const prisma = require("../config/prisma")
-const prisma = new PrismaClient()
 
 const authentication = async(req, res, next)=>{
    try{
@@ -9,7 +8,7 @@ const authentication = async(req, res, next)=>{
     // check if header exists
     if(!authHeader || !authHeader.startsWith("Bearer ")) {
         return res.status(401).json({
-            message: "No tokens provided"
+            message: "No token provided"
         })
     }
     //extract token
@@ -20,7 +19,7 @@ const authentication = async(req, res, next)=>{
 
     const user = await prisma.user.findUnique({
         where: {
-            id: decoded.userId
+            id: decoded.id
         }
     });
     //Attach user
@@ -34,3 +33,4 @@ const authentication = async(req, res, next)=>{
     })
    }
 }
+module.exports = {authentication}

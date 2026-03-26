@@ -80,3 +80,9 @@ Code	Meaning	When
 401	Unauthorized	Wrong credentials / no token
 409	Conflict	Email/username taken
 500	Server Error	Something broke
+
+////////////
+What if token expired?
+What if email already exists?
+What if password is wrong?
+What if DB fails?

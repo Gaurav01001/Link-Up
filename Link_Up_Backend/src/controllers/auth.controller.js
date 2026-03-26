@@ -42,9 +42,13 @@ const login =asyncHandler(async(req, res)=>{
     })
 
 })
+async function getMe(req, res) {
+  // req.user is already attached by the auth middleware
+  // no need to query again
+  res.status(200).json({ user: req.user });
+}
 // STEP 8: Export the register controller so routes can use it
-module.exports = {register, login}
-
+module.exports = { register, login, getMe }
 
 
 

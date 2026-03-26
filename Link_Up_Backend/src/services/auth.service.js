@@ -19,7 +19,7 @@ const registerUser = async(data)=>{
     })
 
     if(existingUser){
-        throw new Error("Username or email already exists");
+        throw ("Username or email already exists");
 
     }
     //hash pasword
@@ -51,7 +51,7 @@ const loginUser = async(data)=>{
         where:{email}
     });
     if(!probablyexists){
-        throw new Error("Error idk why, teri galti")
+        throw {status: 401, message: "Error idk why, teri galti"}
     }
     // compare passwords
     const matched = await bcrypt.compare(password, probablyexists.password)
@@ -63,9 +63,9 @@ const loginUser = async(data)=>{
 
     const token = generateToken(probablyexists.id);
 
-    const {password: _, ...useWithoutPassword } = probablyexists
+   const { password: _, ...userWithoutPassword } = probablyexists
 
-    return{probablyexists: useWithoutPassword, token}
+    return { user: userWithoutPassword, token }
 }
 
 module.exports = {
