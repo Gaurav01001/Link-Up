@@ -1,7 +1,5 @@
 const {PrismaClient} = require('@prisma/client')
-const { email } = require('zod');
-const { message } = require('../config/prisma');
-const { use } = require('react');
+
 const prisma = new PrismaClient()
 
 //fields we will save and return  

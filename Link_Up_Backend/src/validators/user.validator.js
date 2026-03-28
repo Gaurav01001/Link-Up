@@ -1,6 +1,6 @@
 const {anything} = require("zod")
 
-const userprofile = anything.object({
+const userprofileSchema = anything.object({
     name: anything
         .string()
         .max(50, 'Name must be under 50 characters')
@@ -17,10 +17,10 @@ const userprofile = anything.object({
         .optional(),
 });
 
-// const useravatar = anything.object({
-//     avatar: anything
-//         .string({required_error: "Avatar url is required"})
-//         .url('Avatar must have url')
-// })
+const useravatar = anything.object({
+    avatar: anything
+        .string({required_error: "Avatar url is required"})
+        .url('Avatar must have url')
+})
 
 module.exports= { userprofile }
