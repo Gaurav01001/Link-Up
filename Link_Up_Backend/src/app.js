@@ -1,35 +1,28 @@
 const express = require("express")
 const cors = require("cors");
-const authRouters = require("./routes/auth.routes")
-const prisma = require("./config/prisma")
+const authRouter = require("./routes/auth.routes");
+const roleRouter = require("./routes/role.routes")
+// const prisma = require("./config/prisma")
 const errorHandler = require("./middleware/error.middleware")
-const asyncHandler = require("./utils/asyncHandler")
-
+// const asyncHandler = require("./utils/asyncHandler")
+const userRouter = require("./routes/user.routes")
 const app = express();
 
 app.use(cors())
 app.use(express.json())
-app.use("/auth", authRouters)
-
-app.get("/", (req,res)=>{
-    res.json({message: "Backend Active !!"})
+app.use("/auth", authRouter);
+app.use("/roles", roleRouter);
+app.use('/users', userRouter);
+app.get("/", (req, res) => {
+    res.json({ message: "IDK it's running ig" })
 })
 
-app.get(
-    "/test-users",
-    asyncHandler(async(req, res)=>{
-        const user = await prisma.user.create({
-            data:{
-                name: "Test User",
-                email: "test" +Date.now() +"@gmail.com",
-                username: "tester" + Date.now(),
-                password: "12345",
-            }
-        })
-        res.json(user);
-    })
-)
-
-app.use(errorHandler)
 
 module.exports = app;
+/*
+GET  /users/:username  → view profile
+PUT  /users/profile    → edit profile
+PUT  /users/avatar     → update avatar
+*/
+
+

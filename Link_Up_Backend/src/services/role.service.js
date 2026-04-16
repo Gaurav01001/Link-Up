@@ -4,7 +4,6 @@ exports.createRole = async (userId, data) => {
     const activeRole = await prisma.role.count({
         where: {
             creatorId: userId,
-            isActive: true,
         }
     })
     if (activeRole >= 3) {
@@ -24,4 +23,25 @@ exports.createRole = async (userId, data) => {
         }
     })
     return role;
+}
+
+// function to get all the roles
+exports.getRoles = async () => {
+    const now = new Date();
+    const roles = await prisma.role.findMany({
+        where: {
+            deadline: {
+                gte: now,
+            },
+        },
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    username: true,
+                }
+            }
+        }
+    });
+    return roles;
 }
