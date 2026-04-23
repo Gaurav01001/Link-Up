@@ -18,7 +18,7 @@ exports.createRole = async (userId, data) => {
             description: data.description,
             location: data.location,
             isOnline: data.isOnline ?? true,
-            deadline: new Date(data.deadline),
+            ...(data.deadline ? { deadline: new Date(data.deadline) } : {}),
             creatorId: userId,
         }
     })

@@ -19,8 +19,9 @@ const registerUser = async(data)=>{
     })
 
     if(existingUser){
-        throw ("Username or email already exists");
-
+        const err = new Error("Username or email already exists");
+        err.status = 409;
+        throw err;
     }
     //hash pasword
     const hashedPassword = await bcrypt.hash(password, 10);
