@@ -1,6 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler")
 const { registerUser, loginUser } = require("../services/auth.service")
 const { registerSchema, loginSchema } = require("../validators/auth.validator");
+const { role } = require("../config/prisma");
 
 // Register
 const register = asyncHandler(async (req, res) => {
@@ -23,6 +24,7 @@ const login = asyncHandler(async (req, res) => {
         token
     })
 });
+
 
 // Get current user (protected)
 async function getMe(req, res) {

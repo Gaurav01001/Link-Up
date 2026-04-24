@@ -4,6 +4,10 @@ exports.createRole = async (userId, data) => {
     const activeRole = await prisma.role.count({
         where: {
             creatorId: userId,
+            isActive: true,
+            deadline: {
+                gte : new Date()
+            }
         }
     })
     if (activeRole >= 3) {
@@ -30,6 +34,7 @@ exports.getRoles = async () => {
     const now = new Date();
     const roles = await prisma.role.findMany({
         where: {
+            isActive: true,
             deadline: {
                 gte: now,
             },
@@ -60,8 +65,12 @@ exports.updateRole = async (roleId, userId, data) => {
     if (role.creatorId !== userId) {
         throw new Error("Unauthorized");
     }
+    if (new Date(role.deadline) < new Date()) {
+  throw new Error("Role expired");
+}
 
     // 🔹 update role
+    delete data.isActive;
     const updatedRole = await prisma.role.update({
         where: { id: roleId },
         data: data
@@ -69,3 +78,27 @@ exports.updateRole = async (roleId, userId, data) => {
 
     return updatedRole;
 };
+
+exports.deleteRole = async(roleId, userId)=>{
+    const role =  await prisma.role.findUnique({
+        where: {id : roleId}
+    })
+
+    if(!role){
+        throw new Error("Role not found");
+    }
+    if (!role.isActive) {
+    throw new Error("Cannot update deleted role");
+}
+    if(role.creatorId !== userId){
+        throw new Error("Unauthorized");
+
+    }
+  if (new Date(role.deadline) < new Date()) {
+        throw new Error("Role alrady deleted")
+    }
+return await prisma.role.update({
+    where: { id: roleId },
+    data: { isActive: false }
+});
+}
