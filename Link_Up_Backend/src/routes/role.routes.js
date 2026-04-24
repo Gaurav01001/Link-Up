@@ -6,8 +6,7 @@ const auth = require("../middleware/auth.middleware");
 
 // create role
 router.post("/", auth, roleController.createRole);
-
-// get roles
 router.get("/", roleController.getRoles);
+router.put("/:id", auth, roleController.updateRole);
 
 module.exports = router;

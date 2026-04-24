@@ -9,7 +9,7 @@ Talks to client
 */
 
 const roleService = require("../services/role.service");
-const { createRoleSchema } = require("../validators/role.validators");
+const { createRoleSchema, updateRoleSchema } = require("../validators/role.validators");
 
 const createRole = async (req, res) => {
     try {
@@ -56,7 +56,38 @@ const getRoles = async (req, res) => {
     }
 };
 
+const updateRole = async (req, res) => {
+    try {
+        const validData = updateRoleSchema.parse(req.body);
+        const roleId = parseInt(req.params.id);
+        const userId = req.user.id;
+
+        const updatedRole = await roleService.updateRole(roleId, userId, validData);
+
+        res.status(200).json({
+            success: true,
+            data: updatedRole,
+        });
+    } catch (error) {
+        if (error?.issues) {
+            return res.status(400).json({
+                success: false,
+                message: "Validation failed",
+                errors: error.issues.map(e => ({
+                    field: e.path.join('.'),
+                    message: e.message
+                }))
+            });
+        }
+        res.status(error.status || 500).json({
+            success: false,
+            message: error.message || "Internal server error"
+        });
+    }
+};
+
 module.exports = {
     createRole,
-    getRoles
+    getRoles,
+    updateRole
 };

@@ -45,3 +45,27 @@ exports.getRoles = async () => {
     });
     return roles;
 }
+exports.updateRole = async (roleId, userId, data) => {
+
+    // 🔹 find role
+    const role = await prisma.role.findUnique({
+        where: { id: roleId }
+    });
+
+    if (!role) {
+        throw new Error("Role not found");
+    }
+
+    // 🔥 RULE: only owner can update
+    if (role.creatorId !== userId) {
+        throw new Error("Unauthorized");
+    }
+
+    // 🔹 update role
+    const updatedRole = await prisma.role.update({
+        where: { id: roleId },
+        data: data
+    });
+
+    return updatedRole;
+};
