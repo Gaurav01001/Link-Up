@@ -88,14 +88,18 @@ async function changeAvatar(req, res) {
         }))
       });
     }
-
+    if(error.status){
+      return res.status(error.status).json({
+        error: error.message
+      })
+    }
+    
     console.error('Change avatar error:', error);
     res.status(error.status || 500).json({
       error: error.message || 'Internal server error'
     });
   }
 }
-
 
 module.exports = {
   getProfile,
