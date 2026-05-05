@@ -15,3 +15,4 @@ process.on("uncaughtException", (err) => {
 process.on("unhandledRejection", (err) => {
   console.error("UNHANDLED REJECTION:", err);
 });
+console.log("THIS SERVER FILE IS RUNNING");
