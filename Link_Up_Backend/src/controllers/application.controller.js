@@ -1,9 +1,16 @@
-const { success } = require('zod');
-const { message } = require('../config/prisma');
-const { applyToRole, getApplicationsForRole, updateApplicationStatus: updateApplicationStatusService } = require('../services/application.service');
+const {
+  applyToRole,
+  getApplicationsForRole: getApplicationsForRoleService,
+  updateApplicationStatus: updateApplicationStatusService
+} = require("../services/application.service");
+
+const {
+  updateApplicationSchema
+} = require("../validators/application.validator");
 
 async function applyRole(req, res) {
   try {
+
     const roleId = req.params.id;
     const userId = req.user.id;
 
@@ -11,25 +18,35 @@ async function applyRole(req, res) {
 
     res.status(201).json({
       success: true,
-      message: 'Application submitted successfully',
+      message: "Application submitted successfully",
       data: application,
     });
 
   } catch (error) {
-    res.status(400).json({
+
+    res.status(error.status || 500).json({
       success: false,
-      message: error.message
+      message: error.message || "Internal server error",
     });
+
   }
 }
 
 async function updateApplication(req, res) {
   try {
+
     const applicationId = req.params.id;
     const userId = req.user.id;
-    const { status } = req.body;
 
-    const updated = await updateApplicationStatusService(applicationId, userId, status);
+    // Validate request body
+    const validData = updateApplicationSchema.parse(req.body);
+
+    // Update application status
+    const updated = await updateApplicationStatusService(
+      applicationId,
+      userId,
+      validData.status
+    );
 
     res.status(200).json({
       success: true,
@@ -37,35 +54,43 @@ async function updateApplication(req, res) {
     });
 
   } catch (error) {
-    res.status(400).json({
+
+    res.status(error.status || 500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Internal server error",
     });
+
   }
 }
 
-async function getApplications(req, res) {
+async function getApplicationsForRole(req, res) {
   try {
+
     const roleId = req.params.id;
     const userId = req.user.id;
 
-    const apps = await getApplicationsForRole(roleId, userId);
+    const applications = await getApplicationsForRoleService(
+      roleId,
+      userId
+    );
 
     res.status(200).json({
       success: true,
-      data: apps,
+      data: applications,
     });
 
   } catch (error) {
-    res.status(400).json({
+
+    res.status(error.status || 500).json({
       success: false,
-      message: error.message,
+      message: error.message || "Internal server error",
     });
+
   }
 }
 
 module.exports = {
   applyRole,
-  getApplications,
+  getApplicationsForRole,
   updateApplication,
 };

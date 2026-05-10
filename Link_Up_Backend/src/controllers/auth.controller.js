@@ -1,7 +1,7 @@
 const asyncHandler = require("../utils/asyncHandler")
 const { registerUser, loginUser } = require("../services/auth.service")
 const { registerSchema, loginSchema } = require("../validators/auth.validator");
-const { role } = require("../config/prisma");
+
 
 // Register
 const register = asyncHandler(async (req, res) => {

@@ -2,8 +2,9 @@ const express = require("express")
 const cors = require("cors");
 const authRouter = require("./routes/auth.routes");
 const roleRouter = require("./routes/role.routes")
-const errorHandler = require("./middleware/error.middleware")
 const userRouter = require("./routes/user.routes")
+const applicationRouter = require("./routes/application.routes")
+const errorHandler = require("./middleware/error.middleware")
 const app = express();
 
 app.use(cors())
@@ -17,13 +18,15 @@ app.get("/", (req, res) => {
 app.use("/auth", authRouter);
 app.use("/roles", roleRouter);
 app.use('/users', userRouter);
+app.use('/applications', applicationRouter);
 
-// Global error handler — must be LAST
-app.use(errorHandler);
 app.post("/test", (req, res) => {
   console.log("TEST ROUTE HIT");
   res.json({ message: "POST working" });
 });
+
+// Global error handler — must be LAST
+app.use(errorHandler);
 module.exports = app;
 
 /*

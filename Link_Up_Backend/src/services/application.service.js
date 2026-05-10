@@ -1,6 +1,4 @@
-const { PrismaClient } = require("@prisma/client");
-
-const prisma = new PrismaClient();
+const prisma = require("../config/prisma");
 
 const applyToRole = async (roleId, userId) => {
 
@@ -16,7 +14,7 @@ const applyToRole = async (roleId, userId) => {
     if (!role.isActive) {
         throw new Error("Role is no longer Active!")
     }
-    if (new Date(role.deadline) < new Date()) {
+    if (role.deadline && new Date(role.deadline) < new Date()) {
         throw new Error("Role deadline has passed")
     }
     try {
@@ -55,7 +53,8 @@ const getApplicationsForRole = async (roleId, userId) => {
                 select: {
                     id: true,
                     username: true,
-                    email: true,
+                    name: true,
+                    bio: true
                 }
             }
         }
@@ -63,10 +62,10 @@ const getApplicationsForRole = async (roleId, userId) => {
     return application;
 }
 
-const updateApplicationStatus = async (applocationId, userId, status) => {
+const updateApplicationStatus = async (applicationId, userId, status) => {
     const application = await prisma.application.findUnique({
         where: {
-            id: applocationId,
+            id: applicationId,
         },
         include: {
             role: true,
@@ -75,7 +74,7 @@ const updateApplicationStatus = async (applocationId, userId, status) => {
     if (!application) {
         throw new Error("Application not found")
     }
-    if (application.role.creatorId != userId) {
+    if (application.role.creatorId !== userId) {
         throw new Error("Unauthorized")
     }
     if (application.status !== "PENDING") {
@@ -93,6 +92,42 @@ const updateApplicationStatus = async (applocationId, userId, status) => {
             status: status
         }
     })
+
+
+    if (status === "ACCEPTED") {
+        // Reject all other pending applications for this role
+        await prisma.application.updateMany({
+            where: {
+                roleId: application.roleId,
+                status: "PENDING",
+                id: {
+                    not: applicationId,
+                }
+            },
+            data: {
+                status: "Rejected Sorry"
+            }
+        })
+        //close the role
+        await prisma.role.update({
+            where: {
+                id: application.roleId
+            },
+            data: {
+                isActive: false,
+            }
+        })
+
+        // Create connection between role creator and accepted applicant
+        await prisma.connection.create({
+            data: {
+                requesterId: application.role.creatorId,
+                receiverId: application.applicantId,
+                status: "ACCEPTED"
+            }
+        })
+    }
+
     return updateApplication;
 }
 
