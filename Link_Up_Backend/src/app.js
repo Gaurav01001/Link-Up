@@ -4,6 +4,7 @@ const authRouter = require("./routes/auth.routes");
 const roleRouter = require("./routes/role.routes")
 const userRouter = require("./routes/user.routes")
 const applicationRouter = require("./routes/application.routes")
+const connectionRouter = require("./routes/connection.routes")
 const errorHandler = require("./middleware/error.middleware")
 const app = express();
 
@@ -19,6 +20,7 @@ app.use("/auth", authRouter);
 app.use("/roles", roleRouter);
 app.use('/users', userRouter);
 app.use('/applications', applicationRouter);
+app.use('/connections', connectionRouter);
 
 app.post("/test", (req, res) => {
   console.log("TEST ROUTE HIT");
