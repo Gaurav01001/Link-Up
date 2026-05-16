@@ -86,3 +86,12 @@ What if token expired?
 What if email already exists?
 What if password is wrong?
 What if DB fails?
+
+/////
+PLASE 7
+
+src/app.js
+prisma/schema.prisma (maybe)
+src/services/application.service.js
+
+Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjFkYzgyZjIyLTI5NjUtNGU5NC04NGYwLWM4ZDYxNDczYmNmZSIsImlhdCI6MTc3NzIyNTY4OCwiZXhwIjoxNzc3ODMwNDg4fQ.Z4v3Hbfk0SqWvM4UVTeM8GdckinvkFy8HtJSO0AjLSg

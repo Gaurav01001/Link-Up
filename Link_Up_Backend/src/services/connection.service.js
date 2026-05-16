@@ -57,20 +57,22 @@ const sendConnectionRequest = async (requesterId, receiverId) => {
 }
 
 const updateConnectionRequest = async (connectionId, userId, status) => {
-    const connection = await prisma.connection.findUnique({
-        where: {
-            id: connectionId,
-            receiverId: userId,
-            status: "PENDING"
-        }
-    })
-    if (!connection) {
-        throw new Error("Connection not found");
+const connection = await prisma.connection.findUnique({
+    where: {
+        id: connectionId,
     }
+})
+  if (!connection) {
+    throw new Error("Connection not found");
+}
 
-    if (connection.status !== "PENDING") {
-        throw new Error("connection request already handled")
-    }
+if (connection.receiverId !== userId) {
+    throw new Error("Unauthorized");
+}
+
+if (connection.status !== "PENDING") {
+    throw new Error("connection request already handled")
+}
 
     const updateConnection = await prisma.connection.update({
         where: {
@@ -80,9 +82,9 @@ const updateConnectionRequest = async (connectionId, userId, status) => {
             status,
         }
     })
-    return updateConnectin;
+    return updateConnection;
 }
-const getUserConnection = async (userId) => {
+const getUserConnections = async (userId) => {
     const connections = await prisma.connection.findMany({
         where: {
             OR: [
@@ -162,6 +164,6 @@ const getPendingConnectionRequest = async (userId) => {
 module.exports = {
     sendConnectionRequest,
     updateConnectionRequest,
-    getUserConnection,
+    getUserConnections,
     getPendingConnectionRequest
 }

@@ -13,7 +13,7 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
 app.get("/", (req, res) => {
-    res.json({ message: "Link_Up Backend is running!" })
+  res.json({ message: "Link_Up Backend is running!" })
 })
 
 app.use("/auth", authRouter);

@@ -7,7 +7,13 @@ const prisma = require("../config/prisma")
 const {generateToken} = require("../utils/jwt")
 
 const registerUser = async(data)=>{
-    const {name, username, email, password} = data;
+    let {name, username, email, password} = data;
+
+    if (!username) {
+        // Auto-generate username from email if not provided
+        const baseUsername = email.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '');
+        username = baseUsername + Math.floor(Math.random() * 10000);
+    }
 
     const existingUser = await prisma.user.findFirst({
         where: {
