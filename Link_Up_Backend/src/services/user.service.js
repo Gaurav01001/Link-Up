@@ -31,7 +31,7 @@ async function updateProfile(userId, data) {
 
         //some else have same username 
         if(existing && existing.id != userId){
-            throw{status: 409, message: 'Username alrady taken'};
+            throw{status: 409, message: 'Username already taken'};
         }
     }
 

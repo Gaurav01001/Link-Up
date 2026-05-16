@@ -58,7 +58,7 @@ const loginUser = async(data)=>{
         where:{email}
     });
     if(!probablyexists){
-        throw {status: 401, message: "Error idk why, teri galti"}
+        throw {status: 401, message: "User not found"}
     }
     // compare passwords
     const matched = await bcrypt.compare(password, probablyexists.password)

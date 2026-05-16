@@ -95,7 +95,7 @@ exports.deleteRole = async(roleId, userId)=>{
 
     }
   if (new Date(role.deadline) < new Date()) {
-        throw new Error("Role alrady deleted")
+        throw new Error("Role already expired")
     }
 return await prisma.role.update({
     where: { id: roleId },

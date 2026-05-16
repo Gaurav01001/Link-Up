@@ -78,7 +78,7 @@ const updateApplicationStatus = async (applicationId, userId, status) => {
         throw new Error("Unauthorized")
     }
     if (application.status !== "PENDING") {
-        throw new Error("Application alrady processed");
+        throw new Error("Application already processed");
     }
     if (!["ACCEPTED", "REJECTED"].includes(status)) {
         throw new Error("Invalid status");
@@ -105,7 +105,7 @@ const updateApplicationStatus = async (applicationId, userId, status) => {
                 }
             },
             data: {
-                status: "Rejected Sorry"
+                status: "REJECTED"
             }
         })
         //close the role
