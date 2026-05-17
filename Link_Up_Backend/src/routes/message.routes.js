@@ -19,7 +19,7 @@ const {
 );
 
 const {
-  createMessage,
+  sendMessage,
   getConversationMessages,
 } = require(
   "../controllers/message.controller"
@@ -29,7 +29,7 @@ router.post(
   "/",
   authentication,
   validate(sendMessageSchema),
-  createMessage
+  sendMessage
 );
 
 router.get(
