@@ -105,7 +105,7 @@ const updateApplicationStatus = async (applicationId, userId, status) => {
                 }
             },
             data: {
-                status: "REJECTED"
+                status: "Rejected Sorry"
             }
         })
         //close the role

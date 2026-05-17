@@ -2,17 +2,17 @@ const express = require("express");
 const router = express.Router();
 
 const roleController = require("../controllers/role.controller");
-const auth = require("../middleware/auth.middleware");
+const authentication = require("../middleware/auth.middleware");
 const { applyRole, getApplicationsForRole } = require("../controllers/application.controller");
 
 // create role
-router.post("/", auth, roleController.createRole);
+router.post("/", authentication, roleController.createRole);
 
 router.get("/", roleController.getRoles);
-router.get("/:id/applications", auth, getApplicationsForRole);
-router.post("/:id/apply", auth, applyRole);
+router.get("/:id/applications", authentication, getApplicationsForRole);
+router.post("/:id/apply", authentication, applyRole);
 
-router.put("/:id", auth, roleController.updateRole);
-router.delete("/:id", auth, roleController.deleteRole);
+router.put("/:id", authentication, roleController.updateRole);
+router.delete("/:id", authentication, roleController.deleteRole);
 
 module.exports = router;

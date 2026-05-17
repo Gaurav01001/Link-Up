@@ -6,6 +6,7 @@ const userRouter = require("./routes/user.routes")
 const applicationRouter = require("./routes/application.routes")
 const connectionRouter = require("./routes/connection.routes")
 const errorHandler = require("./middleware/error.middleware")
+const messageRouter = require("./routes/message.routes");
 const app = express();
 
 app.use(cors())
@@ -21,7 +22,7 @@ app.use("/roles", roleRouter);
 app.use('/users', userRouter);
 app.use('/applications', applicationRouter);
 app.use('/connections', connectionRouter);
-
+app.use("/messages", messageRouter);
 app.post("/test", (req, res) => {
   console.log("TEST ROUTE HIT");
   res.json({ message: "POST working" });
