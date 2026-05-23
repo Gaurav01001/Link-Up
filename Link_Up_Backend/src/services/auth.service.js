@@ -29,7 +29,7 @@ const registerUser = async(data)=>{
         err.status = 409;
         throw err;
     }
-    //hash pasword
+    //hash password
     const hashedPassword = await bcrypt.hash(password, 10);
 
     //create user
@@ -48,7 +48,7 @@ const registerUser = async(data)=>{
             createdAt: true
         }
     })
-    //generate twt tokens
+    //generate jwt token
     const token = generateToken(user.id);
     return{user, token}
 }

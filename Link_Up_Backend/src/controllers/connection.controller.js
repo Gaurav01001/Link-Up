@@ -17,14 +17,14 @@ Service
 Prisma/Database
 
 controller should 
-- recive the data
+- receive the data
 - talk to service
 - send the response
 POST /connections/request
 {
   "receiverId": "123"
 }
-controller handels 
+controller handles 
 req
 res
 params

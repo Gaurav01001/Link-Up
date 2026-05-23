@@ -88,7 +88,7 @@ exports.deleteRole = async(roleId, userId)=>{
         throw new Error("Role not found");
     }
     if (!role.isActive) {
-    throw new Error("Cannot update deleted role");
+    throw new Error("Cannot delete an inactive role");
 }
     if(role.creatorId !== userId){
         throw new Error("Unauthorized");

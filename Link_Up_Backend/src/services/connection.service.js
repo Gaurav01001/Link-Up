@@ -15,9 +15,9 @@ const prisma = require("../config/prisma");
 const sendConnectionRequest = async (requesterId, receiverId) => {
     // check if connection already exist prevent self connections
     if (requesterId === receiverId) {
-        throw new Error("You connect with Yourself");
+        throw new Error("You cannot connect with yourself");
     }
-    //check if reciever exist
+    //check if receiver exists
     const receiver = await prisma.user.findUnique({
         where: {
             id: receiverId
