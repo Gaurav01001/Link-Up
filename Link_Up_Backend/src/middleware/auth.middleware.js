@@ -22,6 +22,11 @@ const authentication = async (req, res, next) => {
                 id: decoded.id
             }
         });
+        if(!user){
+            return res.status(401).json({
+                message: "User not found"
+            })
+        }
         //Attach user
         req.user = user
         next()

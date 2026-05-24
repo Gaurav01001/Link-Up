@@ -9,6 +9,7 @@ const errorHandler = require("./middleware/error.middleware")
 const messageRouter = require("./routes/message.routes");
 const app = express();
 const postRouter = require("./routes/post.routes");
+const searchRouter = require("./routes/search.routes");
 
 app.use(cors())
 app.use(express.json())
@@ -25,6 +26,7 @@ app.use('/applications', applicationRouter);
 app.use('/connections', connectionRouter);
 app.use("/messages", messageRouter);
 app.use("/posts", postRouter);
+app.use("/search", searchRouter);
 
 app.post("/test", (req, res) => {
   console.log("TEST ROUTE HIT");

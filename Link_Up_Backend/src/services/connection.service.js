@@ -57,22 +57,22 @@ const sendConnectionRequest = async (requesterId, receiverId) => {
 }
 
 const updateConnectionRequest = async (connectionId, userId, status) => {
-const connection = await prisma.connection.findUnique({
-    where: {
-        id: connectionId,
+    const connection = await prisma.connection.findUnique({
+        where: {
+            id: connectionId,
+        }
+    })
+    if (!connection) {
+        throw new Error("Connection not found");
     }
-})
-  if (!connection) {
-    throw new Error("Connection not found");
-}
 
-if (connection.receiverId !== userId) {
-    throw new Error("Unauthorized");
-}
+    if (connection.receiverId !== userId) {
+        throw new Error("Unauthorized");
+    }
 
-if (connection.status !== "PENDING") {
-    throw new Error("connection request already handled")
-}
+    if (connection.status !== "PENDING") {
+        throw new Error("connection request already handled")
+    }
 
     const updateConnection = await prisma.connection.update({
         where: {
