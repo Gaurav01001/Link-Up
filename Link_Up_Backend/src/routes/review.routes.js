@@ -4,9 +4,7 @@ const express =
 const router =
   express.Router();
 
-const {
-  authentication,
-} = require(
+const authentication = require(
   "../middleware/auth.middleware"
 );
 

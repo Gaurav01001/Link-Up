@@ -47,6 +47,10 @@ model User {
 
   reportsFiled        Report[]     @relation("ReportsFiled")
   reportsReceived     Report[]     @relation("ReportsReceived")
+
+blockedUsers Block[] @relation("Blocker")
+
+blockedByUsers Block[] @relation("Blocked")
 }
 
 model Role {
@@ -130,13 +134,30 @@ model Review {
 }
 
 model Report {
-  id         String   @id @default(uuid())
-  reason     String
-  createdAt  DateTime @default(now())
+  id          String   @id @default(uuid())
+  reason      String
+  description String?
+  createdAt   DateTime @default(now())
 
   reporter   User     @relation("ReportsFiled", fields: [reporterId], references: [id])
   reporterId String
 
   reported   User     @relation("ReportsReceived", fields: [reportedId], references: [id])
   reportedId String
+}
+
+model Block {
+
+  id String @id @default(uuid())
+
+  blockerId String
+  blockedId String
+
+  blocker User @relation("Blocker",fields: [blockerId],references: [id])
+
+  blocked User @relation("Blocked", fields: [blockedId], references: [id])
+
+  createdAt DateTime @default(now())
+
+  @@unique([blockerId, blockedId])
 }

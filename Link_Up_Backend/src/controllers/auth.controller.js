@@ -1,12 +1,10 @@
-const asyncHandler = require("../utils/asyncHandler")
-const { registerUser, loginUser } = require("../services/auth.service")
-const { registerSchema, loginSchema } = require("../validators/auth.validator");
+const asyncHandler = require("../utils/asyncHandler");
+const { registerUser, loginUser } = require("../services/auth.service");
 
 
 // Register
 const register = asyncHandler(async (req, res) => {
-    const validatedData = registerSchema.parse(req.body)
-    const { user, token } = await registerUser(validatedData);
+    const { user, token } = await registerUser(req.body);
     res.status(201).json({
         message: "User registered successfully",
         user,
@@ -16,8 +14,7 @@ const register = asyncHandler(async (req, res) => {
 
 // Login
 const login = asyncHandler(async (req, res) => {
-    const validData = loginSchema.parse(req.body)
-    const { user, token } = await loginUser(validData)
+    const { user, token } = await loginUser(req.body);
     res.status(200).json({
         message: 'Login successful',
         user,
