@@ -25,10 +25,34 @@ const createRoleSchema = z.object({
         .default(true),
 
     deadline: z
-        .string({ required_error: 'Deadline is required' })
+        .string()
         .refine((date) => !isNaN(Date.parse(date)), 'Invalid date format')
         .refine((date) => new Date(date) > new Date(), 'Deadline must be in the future')
         .optional(),
+
+    eventDate: z
+        .string()
+        .refine((date) => !isNaN(Date.parse(date)), 'Invalid date format')
+        .optional(),
+
+    spotsTotal: z
+        .number()
+        .int()
+        .min(1, 'Must have at least 1 spot')
+        .max(100, 'Cannot exceed 100 spots')
+        .optional()
+        .default(1),
+
+    imageUrl: z
+        .string()
+        .url('Must be a valid URL')
+        .optional(),
+
+    tags: z
+        .array(z.string())
+        .max(5, 'Maximum 5 tags')
+        .optional()
+        .default([]),
 });
 
 const updateRoleSchema = z.object({
@@ -41,6 +65,28 @@ const updateRoleSchema = z.object({
         .string()
         .refine((date) => !isNaN(Date.parse(date)), 'Invalid date format')
         .refine((date) => new Date(date) > new Date(), 'Deadline must be in the future')
+        .optional(),
+
+    eventDate: z
+        .string()
+        .refine((date) => !isNaN(Date.parse(date)), 'Invalid date format')
+        .optional(),
+
+    spotsTotal: z
+        .number()
+        .int()
+        .min(1)
+        .max(100)
+        .optional(),
+
+    imageUrl: z
+        .string()
+        .url('Must be a valid URL')
+        .optional(),
+
+    tags: z
+        .array(z.string())
+        .max(5, 'Maximum 5 tags')
         .optional(),
 });
 

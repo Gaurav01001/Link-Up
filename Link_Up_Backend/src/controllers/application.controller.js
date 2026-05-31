@@ -1,7 +1,8 @@
 const {
   applyToRole,
   getApplicationsForRole: getApplicationsForRoleService,
-  updateApplicationStatus: updateApplicationStatusService
+  updateApplicationStatus: updateApplicationStatusService,
+  getMyApplications: getMyApplicationsService,
 } = require("../services/application.service");
 
 const {
@@ -89,8 +90,26 @@ async function getApplicationsForRole(req, res) {
   }
 }
 
+async function getMyApplications(req, res) {
+  try {
+    const userId = req.user.id;
+    const applications = await getMyApplicationsService(userId);
+
+    res.status(200).json({
+      success: true,
+      data: applications,
+    });
+  } catch (error) {
+    res.status(error.status || 500).json({
+      success: false,
+      message: error.message || 'Internal server error',
+    });
+  }
+}
+
 module.exports = {
   applyRole,
   getApplicationsForRole,
   updateApplication,
+  getMyApplications,
 };

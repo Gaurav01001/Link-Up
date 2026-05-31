@@ -56,6 +56,23 @@ const getRoles = async (req, res) => {
     }
 };
 
+const getRoleById = async (req, res) => {
+    try {
+        const roleId = req.params.id;
+        const role = await roleService.getRoleById(roleId);
+
+        res.status(200).json({
+            success: true,
+            data: role,
+        });
+    } catch (error) {
+        res.status(error.status || 404).json({
+            success: false,
+            message: error.message || 'Role not found',
+        });
+    }
+};
+
 const updateRole = async (req, res) => {
     try {
         const validData = updateRoleSchema.parse(req.body);
@@ -106,6 +123,7 @@ const deleteRole = async (req, res) => {
 module.exports = {
     createRole,
     getRoles,
+    getRoleById,
     updateRole,
     deleteRole
 };

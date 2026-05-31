@@ -131,9 +131,30 @@ const updateApplicationStatus = async (applicationId, userId, status) => {
     return updateApplication;
 }
 
+const getMyApplications = async (userId) => {
+    const applications = await prisma.application.findMany({
+        where: { applicantId: userId },
+        include: {
+            role: {
+                include: {
+                    creator: {
+                        select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                        }
+                    }
+                }
+            }
+        },
+        orderBy: { createdAt: 'desc' },
+    });
+    return applications;
+};
+
 module.exports = {
     applyToRole,
     getApplicationsForRole,
-    updateApplicationStatus
+    updateApplicationStatus,
+    getMyApplications,
 };
-

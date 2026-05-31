@@ -17,12 +17,16 @@ exports.createRole = async (userId, data) => {
     // create new role
     const role = await prisma.role.create({
         data: {
-            title: data.title,
-            category: data.category,
+            title:       data.title,
+            category:    data.category,
             description: data.description,
-            location: data.location,
-            isOnline: data.isOnline ?? true,
-            ...(data.deadline ? { deadline: new Date(data.deadline) } : {}),
+            location:    data.location,
+            isOnline:    data.isOnline ?? true,
+            spotsTotal:  data.spotsTotal ?? 1,
+            tags:        data.tags ?? [],
+            ...(data.deadline  ? { deadline:  new Date(data.deadline)  } : {}),
+            ...(data.eventDate ? { eventDate: new Date(data.eventDate) } : {}),
+            ...(data.imageUrl  ? { imageUrl:  data.imageUrl  }          : {}),
             creatorId: userId,
         }
     })
@@ -44,11 +48,54 @@ exports.getRoles = async () => {
                 select: {
                     id: true,
                     username: true,
+                    avatar: true,
                 }
+            },
+            _count: {
+                select: { applications: true }
+            }
+        },
+        orderBy: { createdAt: 'desc' },
+    });
+    return roles;
+}
+
+// get a single role by id
+exports.getRoleById = async (roleId) => {
+    const role = await prisma.role.findUnique({
+        where: { id: roleId },
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    username: true,
+                    name: true,
+                    avatar: true,
+                    bio: true,
+                }
+            },
+            applications: {
+                where: { status: 'ACCEPTED' },
+                include: {
+                    applicant: {
+                        select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                        }
+                    }
+                }
+            },
+            _count: {
+                select: { applications: true }
             }
         }
     });
-    return roles;
+
+    if (!role) {
+        throw new Error('Role not found');
+    }
+    return role;
 }
 exports.updateRole = async (roleId, userId, data) => {
 
