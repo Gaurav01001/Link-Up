@@ -1,10 +1,15 @@
-import AppRoutes from './routes/AppRoutes'
-import useSocket from "./hooks/useSocket";
+import { useEffect } from "react";
+import AppRoutes from "./routes/AppRoutes";
+import useAuthStore from "./store/auth.store";
 
+function App() {
+  const init = useAuthStore((state) => state.init);
 
-export default function App() {
-    // You can pass the logged-in user's ID here if available
-    useSocket("user1");
+  useEffect(() => {
+    init();
+  }, [init]);
 
-    return <AppRoutes />
+  return <AppRoutes />;
 }
+
+export default App;

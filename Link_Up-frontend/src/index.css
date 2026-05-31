@@ -41,3 +41,7 @@
     --color-bg-2: #C7D1DB;
     --color-text-primary-rgb: 199, 209, 219;
 }
+
+@keyframes lu-spin {
+    to { transform: rotate(360deg); }
+}

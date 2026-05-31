@@ -1,43 +1,39 @@
-import { useEffect, useRef } from "react";
-import { io } from "socket.io-client";
+import { useEffect } from "react";
+import { getSocket } from "../api/socket";
+import useAuthStore from "../store/auth.store";
 
-const useSocket = (userId) => {
-    const socketRef = useRef(null);
+const useSocket = () => {
+    const socket = getSocket();
+    const user = useAuthStore((state) => state.user);
 
     useEffect(() => {
-        // Initialize socket connection
-        socketRef.current = io("http://localhost:5000");
+        if (!socket || !user) return;
+
+        const handleReceiveMessage = (data) => {
+            console.log("New realtime message:", data);
+        };
 
         // Example: listen to incoming messages
-        socketRef.current.on("receive_message", (data) => {
-            console.log("New realtime message:", data);
-        });
+        socket.on("receive_message", handleReceiveMessage);
 
-        // Emit 'join' if a user ID is provided
-        if (userId) {
-            socketRef.current.emit("join", userId);
-        }
-
-        // Cleanup socket connection on component unmount
+        // Cleanup event listeners on unmount
         return () => {
-            if (socketRef.current) {
-                socketRef.current.disconnect();
-            }
+            socket.off("receive_message", handleReceiveMessage);
         };
-    }, [userId]);
+    }, [socket, user]);
 
     // Function to send messages
     const sendMessage = (receiverId, content) => {
-        if (socketRef.current) {
-            socketRef.current.emit("send_message", {
-                senderId: userId,
+        if (socket && user) {
+            socket.emit("send_message", {
+                senderId: user.id,
                 receiverId,
                 content
             });
         }
     };
 
-    return { socket: socketRef.current, sendMessage };
+    return { socket, sendMessage };
 };
 
 export default useSocket;
