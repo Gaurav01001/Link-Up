@@ -12,6 +12,8 @@ dist/
 dist-ssr/
 *.local
 
+walkthrough.md
+
 # Editor directories and files
 .vscode/
 .idea/
