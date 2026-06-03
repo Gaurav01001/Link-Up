@@ -1,28 +1,34 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppInput, SocialButtons, ShimmerButton, AuthCard, ShootingStars } from '@/components/ui/login-1'
+import { SocialButtons, AuthCard, ShootingStars } from '@/components/ui/login-1'
 import fullChar from '@/assets/images/full_resister_pg1.png'
 import peak5Png from '@/assets/images/peak5.png'
+import Button from '@/components/common/Button'
+import Input from '@/components/common/Input'
+import useAuthStore from '@/store/auth.store'
 
 const STEPS = ['Account', 'Profile', 'Done']
 
-const ROLES = ['Designer', 'Engineer', 'Product Manager', 'Marketer', 'Founder', 'Researcher', 'Other']
-const INTERESTS = ['Design', 'Engineering', 'Product', 'Marketing', 'Data', 'Finance', 'Operations', 'Creative']
+const ROLES = [ 'Student', 'Teacher', 'idk Homo sapiens',]
+const INTERESTS = ['Food(i mean who does not like food)', 'Engineering', 'Books', 'RockClimbing', 'others',]
 
 export default function Register() {
     const [step, setStep] = useState(0)
     const [form, setForm] = useState({
         email: '', password: '', confirmPassword: '',
-        name: '', role: '', interests: [],
+        name: '', username: '', role: '', interests: [],
     })
     const [showPass, setShowPass] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const [localError, setLocalError] = useState('')
     const navigate = useNavigate()
+
+    const register = useAuthStore(state => state.register)
+    const loading = useAuthStore(state => state.loading)
+    const storeError = useAuthStore(state => state.error)
 
     const handleChange = (e) => {
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
-        setError('')
+        setLocalError('')
     }
 
     const toggleInterest = (val) =>
@@ -42,23 +48,44 @@ export default function Register() {
     }
     const validateStep1 = () => {
         if (!form.name.trim()) return 'Please enter your name.'
+        if (!form.username.trim()) return 'Please enter a username.'
         if (!form.role) return 'Please select a role.'
         return null
     }
 
     const handleNext = () => {
+        console.log('[Register] handleNext called, step:', step, 'form:', form)
         const err = step === 0 ? validateStep0() : validateStep1()
-        if (err) { setError(err); return }
-        setError('')
+        if (err) { setLocalError(err); return }
+        setLocalError('')
         setStep(s => s + 1)
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
-        setLoading(true)
-        await new Promise((r) => setTimeout(r, 1400))
-        setLoading(false)
-        navigate('/')
+        console.log('[Register] handleSubmit triggered')
+        console.log('[Register] form data:', JSON.stringify({
+            email: form.email,
+            password: '***',
+            name: form.name,
+            username: form.username,
+            role: form.role,
+        }))
+        try {
+            console.log('[Register] calling authStore.register()')
+            await register({
+                email: form.email,
+                password: form.password,
+                name: form.name,
+                username: form.username,
+                role: form.role,
+                interests: form.interests
+            })
+            console.log('[Register] register() succeeded, navigating to /feed')
+            navigate('/feed')
+        } catch (err) {
+            console.error('[Register] register() threw error:', err?.response?.data || err?.message || err)
+        }
     }
 
     const EyeIcon = () => (
@@ -133,9 +160,9 @@ export default function Register() {
                 </div>
 
                 {/* Error */}
-                {error && (
+                {(localError || storeError) && (
                     <div className="text-sm px-3 py-2 rounded-lg mb-4" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
-                        {error}
+                        {localError || storeError}
                     </div>
                 )}
 
@@ -153,11 +180,11 @@ export default function Register() {
 
                         <SocialButtons label="or sign up with email" />
 
-                        <AppInput name="email" type="email" label="Email" placeholder="you@example.com"
+                        <Input name="email" type="email" label="Email" placeholder="you@example.com"
                             value={form.email} onChange={handleChange} autoComplete="email" />
 
                         <div>
-                            <AppInput name="password" type={showPass ? 'text' : 'password'} label="Password"
+                            <Input name="password" type={showPass ? 'text' : 'password'} label="Password"
                                 placeholder="Min 8 characters" value={form.password} onChange={handleChange}
                                 icon={<EyeIcon />} />
                             {form.password.length > 0 && (
@@ -167,11 +194,17 @@ export default function Register() {
                             )}
                         </div>
 
-                        <AppInput name="confirmPassword" type={showPass ? 'text' : 'password'} label="Confirm Password"
+                        <Input name="confirmPassword" type={showPass ? 'text' : 'password'} label="Confirm Password"
                             placeholder="Re-enter password" value={form.confirmPassword} onChange={handleChange} />
 
-                        <ShimmerButton onClick={handleNext}>Continue →</ShimmerButton>
-
+                        <Button
+                            onClick={handleNext}
+                            type="button"
+                            color="#f6f6f6ff"
+                            style={{ borderRadius: "20px" }}
+                        >
+                            Continue →
+                        </Button>
                         <p className="text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
                             Already have an account?{' '}
                             <Link to="/login" style={{ color: 'var(--color-text-primary)', fontWeight: 600, textDecoration: 'none' }}>
@@ -193,8 +226,11 @@ export default function Register() {
                             </p>
                         </div>
 
-                        <AppInput name="name" type="text" label="Full Name" placeholder="Jane Doe"
+                        <Input name="name" type="text" label="Full Name" placeholder="Jane Doe"
                             value={form.name} onChange={handleChange} />
+                            
+                        <Input name="username" type="text" label="Username" placeholder="janedoe123"
+                            value={form.username} onChange={handleChange} />
 
                         <div>
                             <label className="block mb-2 text-sm font-medium" style={{ color: 'var(--color-text-primary)' }}>
@@ -246,8 +282,25 @@ export default function Register() {
                                 ← Back
                             </button>
                             <div className="flex-1">
-                                <ShimmerButton onClick={handleNext}>Continue →</ShimmerButton>
-                            </div>
+<Button
+  onClick={handleNext}
+  type="button"
+  color="#64978b"
+  style={{
+    background: "linear-gradient(135deg, #64978b, #4f7d72)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "12px",
+    padding: "12px 24px",
+    fontSize: "15px",
+    fontWeight: "600",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(100, 151, 139, 0.3)",
+    transition: "all 0.2s ease",
+  }}
+>
+  Continue →
+</Button>                            </div>
                         </div>
                     </div>
                 )}
@@ -263,12 +316,32 @@ export default function Register() {
                             Welcome to Link Up, <strong style={{ color: 'var(--color-text-primary)' }}>{form.name || 'there'}</strong>.
                             Your account is ready.
                         </p>
+                        
+                        {/* Error Display for Step 2 */}
+                        {(localError || storeError) && (
+                            <div className="w-full text-sm px-3 py-2 rounded-lg" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
+                                {localError || storeError}
+                            </div>
+                        )}
+
                         <div className="w-full">
-                            <ShimmerButton type="submit" disabled={loading}>
-                                {loading
-                                    ? <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                                    : 'Go to Dashboard →'}
-                            </ShimmerButton>
+                            <Button type="submit" loading={loading}
+                              color="#64978b"
+                              style={{
+                                background: "linear-gradient(135deg, #64978b, #4f7d72)",
+                                color: "#fff",
+                                border: "none",
+                                borderRadius: "12px",
+                                padding: "12px 24px",
+                                fontSize: "15px",
+                                fontWeight: "600",
+                                cursor: "pointer",
+                                boxShadow: "0 4px 12px rgba(100, 151, 139, 0.3)",
+                                transition: "all 0.2s ease",
+                              }}
+                            >
+                                Go to Dashboard →
+                            </Button>
                         </div>
                         <p className="text-xs" style={{ color: 'var(--color-text-secondary)' }}>
                             By joining you agree to our{' '}

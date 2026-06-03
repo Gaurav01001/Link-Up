@@ -3,10 +3,10 @@ import useAuthStore from "../store/auth.store";
 
 const PublicRoute = () => {
   const authenticated = useAuthStore((state) => state.authenticated);
-  const loading = useAuthStore((state) => state.loading);
+  const initialized = useAuthStore((state) => state.initialized);
 
-  // Still hydrating auth state — don't redirect yet
-  if (loading) return null;
+  // Don't make routing decisions until auth state is hydrated
+  if (!initialized) return null;
 
   // Already logged in → send to feed
   if (authenticated) {

@@ -1,10 +1,12 @@
 /**
- * Loader — reusable spinner component
+ * Loader — reusable spinner or skeleton loader
  *
  * Props:
- *   size  : 'sm' | 'md' | 'lg'  (default: 'md')
- *   full  : boolean              (default: false) — centres loader in full viewport
- *   label : string               (optional) — accessible screen-reader label
+ *   type  : 'spinner' | 'skeleton' (default: 'skeleton')
+ *   size  : 'sm' | 'md' | 'lg'     (default: 'md' for spinner)
+ *   full  : boolean                (default: false) — centres loader in full viewport
+ *   label : string                 (optional) — accessible screen-reader label
+ *   lines : number                 (optional) — number of lines for skeleton (default: 3)
  */
 
 const sizes = {
@@ -13,7 +15,13 @@ const sizes = {
   lg: { box: 56, stroke: 4 },
 };
 
-export default function Loader({ size = 'md', full = false, label = 'Loading…' }) {
+export default function Loader({ 
+  type = 'skeleton', 
+  size = 'md', 
+  full = false, 
+  label = 'Loading…',
+  lines = 3 
+}) {
   const { box, stroke } = sizes[size] ?? sizes.md;
 
   const spinner = (
@@ -33,6 +41,25 @@ export default function Loader({ size = 'md', full = false, label = 'Loading…'
     />
   );
 
+  const skeleton = (
+    <div
+      role="status"
+      aria-label={label}
+      className="flex flex-col gap-4 w-full max-w-md animate-pulse p-4"
+    >
+      <div className="h-10 bg-gray-200/20 dark:bg-gray-700/50 rounded-lg w-3/4 mb-4"></div>
+      {Array.from({ length: lines }).map((_, i) => (
+        <div 
+          key={i} 
+          className="h-4 bg-gray-200/20 dark:bg-gray-700/50 rounded"
+          style={{ width: `${Math.max(50, 100 - (i * 15))}%` }}
+        ></div>
+      ))}
+    </div>
+  );
+
+  const content = type === 'skeleton' ? skeleton : spinner;
+
   if (full) {
     return (
       <div
@@ -47,10 +74,10 @@ export default function Loader({ size = 'md', full = false, label = 'Loading…'
           zIndex:         9999,
         }}
       >
-        {spinner}
+        {content}
       </div>
     );
   }
 
-  return spinner;
+  return content;
 }

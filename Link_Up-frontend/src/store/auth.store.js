@@ -15,6 +15,7 @@ const useAuthStore = create((set, get) => ({
   loading: false,
   error: null,
   authenticated: false,
+  initialized: false,
 
   login: async (credentials) => {
     set({
@@ -49,13 +50,16 @@ const useAuthStore = create((set, get) => ({
   },
 
   register: async (userData) => {
+    console.log('[authStore.register] called with:', JSON.stringify({ ...userData, password: '***' }));
     set({
       loading: true,
       error: null,
     });
 
     try {
+      console.log('[authStore.register] calling registerUser service...');
       const data = await registerUser(userData);
+      console.log('[authStore.register] service returned:', data);
 
       localStorage.setItem("token", data.token);
 
@@ -71,6 +75,7 @@ const useAuthStore = create((set, get) => ({
 
       return data;
     } catch (error) {
+      console.error('[authStore.register] ERROR:', error?.response?.data || error?.message || error);
       set({
         error: error.response?.data?.message || error.message,
         loading: false,
@@ -125,13 +130,19 @@ const useAuthStore = create((set, get) => ({
   },
 
   init: async () => {
-    const token = localStorage.getItem("token");
+    set({ loading: true });
+    const token = localStorage.getItem('token');
 
-    if (!token) return;
+    if (!token) {
+      set({ loading: false, initialized: true });
+      return;
+    }
 
     set({ token });
 
     await get().fetchCurrentUser();
+
+    set({ initialized: true });
   },
 }));
 

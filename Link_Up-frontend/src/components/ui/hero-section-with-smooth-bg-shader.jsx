@@ -7,7 +7,7 @@ import "./hero.css"
 export function HeroSection({
     title1 = "Connect with real people.",
     title2 = "Not bots.",
-    description = "LinkUp helps you build real professional and personal connections — without fake profiles or algorithm noise.",
+    description = "IDK why I'm making this but if you like it please give me an Internship",
     primaryButtonText = "Get Started",
     secondaryButtonText = "Learn More",
     onPrimaryClick,
@@ -72,7 +72,7 @@ export function HeroSection({
                     {/* Badge */}
                     <div className="lu-badge">
                         <span className="lu-badge__dot" />
-                        LINKUP
+                        S!de Quest!
                     </div>
 
                     {/* Headline */}
@@ -104,7 +104,7 @@ export function HeroSection({
                                 <span key={i} className="lu-avatar" style={{ background: c, zIndex: 4 - i }} />
                             ))}
                         </span>
-                        Join <strong>5,000+</strong> real users
+                        Join <strong>5,000+</strong> Fake users
                     </p>
                 </div>
 

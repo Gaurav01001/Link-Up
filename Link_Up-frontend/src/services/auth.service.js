@@ -1,17 +1,30 @@
 // ─── Auth Service ─────────────────────────────────────────────────────────────
 // Pure API calls only. No state, no side effects.
 // All state management happens in store/auth.store.js.
+//
+// NOTE: Backend mounts routes at /auth/*, not /api/auth/*.
+// baseURL is http://localhost:5000 so paths here start directly with /auth/
 
 import api from '../api/axios';
 
 /**
  * Register a new user.
- * @param {{ username: string, email: string, password: string, fullName: string }} data
+ * @param {{ username: string, email: string, password: string, name: string }} data
  * @returns {Promise<{ user: object, token: string }>}
  */
 export async function register(data) {
-  const res = await api.post('/api/auth/register', data);
-  return res.data;
+  console.log('[auth.service.register] POSTing to /auth/register');
+  console.log('[auth.service.register] baseURL:', api.defaults.baseURL);
+  console.log('[auth.service.register] payload:', JSON.stringify({ ...data, password: '***' }));
+  try {
+    const res = await api.post('/auth/register', data);
+    console.log('[auth.service.register] response status:', res.status);
+    console.log('[auth.service.register] response data:', res.data);
+    return res.data;
+  } catch (err) {
+    console.error('[auth.service.register] FAILED:', err?.response?.status, err?.response?.data || err?.message);
+    throw err;
+  }
 }
 
 /**
@@ -20,7 +33,7 @@ export async function register(data) {
  * @returns {Promise<{ user: object, token: string }>}
  */
 export async function login(data) {
-  const res = await api.post('/api/auth/login', data);
+  const res = await api.post('/auth/login', data);
   return res.data;
 }
 
@@ -30,7 +43,7 @@ export async function login(data) {
  * @returns {Promise<{ user: object }>}
  */
 export async function getMe() {
-  const res = await api.get('/api/auth/me');
+  const res = await api.get('/auth/me');
   return res.data;
 }
 
@@ -40,5 +53,5 @@ export async function getMe() {
  * @returns {Promise<void>}
  */
 export async function logout() {
-  await api.post('/api/auth/logout');
+  await api.post('/auth/logout');
 }

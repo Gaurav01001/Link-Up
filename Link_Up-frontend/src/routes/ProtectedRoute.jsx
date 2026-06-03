@@ -3,15 +3,11 @@ import useAuthStore from "../store/auth.store";
 import Loader from "../components/common/Loader";
 
 const ProtectedRoute = () => {
-  const authenticated = useAuthStore(
-    (state) => state.authenticated
-  );
+  const authenticated = useAuthStore((state) => state.authenticated);
+  const initialized = useAuthStore((state) => state.initialized);
 
-  const loading = useAuthStore(
-    (state) => state.loading
-  );
-
-  if (loading) {
+  // Block rendering until init() has finished reading localStorage + fetching user
+  if (!initialized) {
     return <Loader full />;
   }
 

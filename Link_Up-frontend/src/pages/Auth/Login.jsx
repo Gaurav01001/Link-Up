@@ -1,7 +1,10 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { AppInput, SocialButtons, ShimmerButton, AuthCard, ShootingStars } from '@/components/ui/login-1'
+import { SocialButtons, AuthCard, ShootingStars } from '@/components/ui/login-1'
 import fullChar from '@/assets/images/full_resister_pg1.png'
+import Button from '@/components/common/Button'
+import Input from '@/components/common/Input'
+import useAuthStore from '@/store/auth.store'
 
 const LOGIN_RIGHT_PANEL = (
     <div style={{
@@ -32,25 +35,31 @@ const LOGIN_RIGHT_PANEL = (
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' })
     const [showPass, setShowPass] = useState(false)
-    const [loading, setLoading] = useState(false)
-    const [error, setError] = useState('')
+    const [localError, setLocalError] = useState('')
     const navigate = useNavigate()
+
+    const login = useAuthStore(state => state.login)
+    const loading = useAuthStore(state => state.loading)
+    const storeError = useAuthStore(state => state.error)
 
     const handleChange = (e) => {
         setForm((p) => ({ ...p, [e.target.name]: e.target.value }))
-        setError('')
+        setLocalError('')
     }
 
     const handleSubmit = async (e) => {
         e.preventDefault()
         if (!form.email || !form.password) {
-            setError('Please fill in all fields.')
+            setLocalError('Please fill in all fields.')
             return
         }
-        setLoading(true)
-        await new Promise((r) => setTimeout(r, 1200))
-        setLoading(false)
-        navigate('/')
+        
+        try {
+            await login({ email: form.email, password: form.password })
+            navigate('/feed')
+        } catch (err) {
+            // error is handled by the store, but we can catch to prevent navigation
+        }
     }
 
     const EyeIcon = () => (
@@ -79,7 +88,7 @@ export default function Login() {
                             Hi, Welcome Back! 👋
                         </h1>
                         <p className="text-sm" style={{ color: 'var(--color-text-secondary)' }}>
-                            Sign in to continue to Link Up
+                            Login to continue to Link Up
                         </p>
                     </div>
 
@@ -87,14 +96,14 @@ export default function Login() {
                     <SocialButtons label="or sign in with email" />
 
                     {/* Error */}
-                    {error && (
+                    {(localError || storeError) && (
                         <div className="text-sm px-3 py-2 rounded-lg" style={{ background: 'rgba(239,68,68,0.12)', color: '#f87171', border: '1px solid rgba(239,68,68,0.3)' }}>
-                            {error}
+                            {localError || storeError}
                         </div>
                     )}
 
                     {/* Fields */}
-                    <AppInput
+                    <Input
                         name="email"
                         type="email"
                         label="Email"
@@ -103,7 +112,7 @@ export default function Login() {
                         onChange={handleChange}
                         autoComplete="email"
                     />
-                    <AppInput
+                    <Input
                         name="password"
                         type={showPass ? 'text' : 'password'}
                         label="Password"
@@ -125,11 +134,24 @@ export default function Login() {
                     </div>
 
                     {/* Submit */}
-                    <ShimmerButton type="submit" disabled={loading}>
-                        {loading ? (
-                            <span className="inline-block w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                        ) : 'Sign In'}
-                    </ShimmerButton>
+                    <Button
+                      color="#64978b"
+  style={{
+    background: "linear-gradient(135deg, #64978b, #4f7d72)",
+    color: "#fff",
+    border: "none",
+    borderRadius: "12px",
+    padding: "12px 24px",
+    fontSize: "15px",
+    fontWeight: "600",
+    cursor: "pointer",
+    boxShadow: "0 4px 12px rgba(100, 151, 139, 0.3)",
+    transition: "all 0.2s ease",
+  }}
+
+                    type="submit" loading={loading} variant="primary">
+                        Sign In
+                    </Button>
 
                     {/* Switch */}
                     <p className="text-center text-sm" style={{ color: 'var(--color-text-secondary)' }}>
