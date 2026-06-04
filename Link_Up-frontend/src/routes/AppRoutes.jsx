@@ -21,6 +21,7 @@ import Profile from "../pages/Profile/Profile";
 import EditProfile from "../pages/Profile/EditProfile";
 import Search from "../pages/Search/Search";
 import Notifications from "../pages/Notifications/Notifications";
+import Feed from "../pages/Feed/Feed";
 
 export default function AppRoutes() {
   return (
@@ -38,7 +39,10 @@ export default function AppRoutes() {
       {/* Protected Routes */}
       <Route element={<ProtectedRoute />}>
         {/* Feed redirects to discover quests as requested in the design change /feed → DiscoverQuests */}
-        <Route path="/feed" element={<DiscoverQuests />} />
+        <Route path="/feed" element={<Feed />} />
+
+        {/* <Route path="/feed" element={<DiscoverQuests />} /> */} 
+        
         
         <Route path="/social" element={<SocialFeed />} />
 
