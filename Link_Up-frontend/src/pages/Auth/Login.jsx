@@ -125,12 +125,12 @@ export default function Login() {
 
                     {/* Forgot */}
                     <div className="text-right -mt-2">
-                        <a href="#" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}
+                        <Link to="/forgot-password" className="text-sm" style={{ color: 'var(--color-text-secondary)' }}
                             onMouseEnter={e => e.target.style.color = 'var(--color-text-primary)'}
                             onMouseLeave={e => e.target.style.color = 'var(--color-text-secondary)'}
                         >
                             Forgot password?
-                        </a>
+                        </Link>
                     </div>
 
                     {/* Submit */}

@@ -7,6 +7,8 @@ import PublicRoute from "./PublicRoute";
 import LandingPage from "../pages/Home/Landing_page";
 import Login from "../pages/Auth/Login";
 import Register from "../pages/Auth/Register";
+import ForgotPassword from "../pages/Auth/ForgotPassword";
+import ResetPassword from "../pages/Auth/ResetPassword";
 
 // Protected Pages
 import DiscoverQuests from "../pages/Quests/DiscoverQuests";
@@ -34,6 +36,8 @@ export default function AppRoutes() {
       <Route element={<PublicRoute />}>
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
       </Route>
 
       {/* Protected Routes */}

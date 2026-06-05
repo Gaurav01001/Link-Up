@@ -38,6 +38,27 @@ export async function login(data) {
 }
 
 /**
+ * Request password reset link.
+ * @param {string} email
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export async function forgotPassword(email) {
+  const res = await api.post('/auth/forgot-password', { email });
+  return res.data;
+}
+
+/**
+ * Reset password with a token.
+ * @param {string} token
+ * @param {string} password
+ * @returns {Promise<{ success: boolean, message: string }>}
+ */
+export async function resetPassword(token, password) {
+  const res = await api.post('/auth/reset-password', { token, password });
+  return res.data;
+}
+
+/**
  * Fetch the currently authenticated user using the stored token.
  * Used on app load to hydrate the auth store.
  * @returns {Promise<{ user: object }>}
@@ -55,3 +76,4 @@ export async function getMe() {
 export async function logout() {
   await api.post('/auth/logout');
 }
+

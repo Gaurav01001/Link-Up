@@ -21,7 +21,16 @@ api.interceptors.response.use(
     if (err.response?.status === 401) {
       localStorage.removeItem('token');
       localStorage.removeItem('user');
-      window.location.href = '/login';
+      
+      // Do not redirect/reload if the error is from a login/auth request or we are already on the login page
+      const isAuthRoute = err.config?.url?.includes('/auth/login') || 
+                          err.config?.url?.includes('/auth/register') ||
+                          err.config?.url?.includes('/auth/forgot-password') ||
+                          err.config?.url?.includes('/auth/reset-password');
+                          
+      if (!isAuthRoute && window.location.pathname !== '/login') {
+        window.location.href = '/login';
+      }
     }
     return Promise.reject(err);
   }
