@@ -1,5 +1,5 @@
 const asyncHandler = require("../utils/asyncHandler");
-const { registerUser, loginUser } = require("../services/auth.service");
+const { registerUser, loginUser, requestPasswordReset, resetUserPassword } = require("../services/auth.service");
 
 
 // Register
@@ -32,4 +32,25 @@ async function getMe(req, res) {
     res.status(200).json({ user: userWithoutPassword });
 }
 
-module.exports = { register, login, getMe }
+// Forgot Password
+const forgotPassword = asyncHandler(async (req, res) => {
+    const { email } = req.body;
+    await requestPasswordReset(email);
+    res.status(200).json({
+        success: true,
+        message: "If a matching account is found, a password reset link has been sent to your email."
+    });
+});
+
+// Reset Password
+const resetPassword = asyncHandler(async (req, res) => {
+    const { token, password } = req.body;
+    await resetUserPassword(token, password);
+    res.status(200).json({
+        success: true,
+        message: "Password has been successfully reset."
+    });
+});
+
+module.exports = { register, login, getMe, forgotPassword, resetPassword }
+
