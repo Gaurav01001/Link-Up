@@ -18,6 +18,7 @@ export const Navbar = () => {
     { name: "Feed", path: "/feed" },
     { name: "Quests", path: "/quests" },
     { name: "Messages", path: "/messages" },
+    { name: "Search", path: "/search" },
   ]
 
   const handleLogout = () => {
