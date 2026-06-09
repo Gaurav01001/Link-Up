@@ -24,7 +24,7 @@ import EditProfile from "../pages/Profile/EditProfile";
 import Search from "../pages/Search/Search";
 import Notifications from "../pages/Notifications/Notifications";
 import Feed from "../pages/Feed/Feed";
-
+import QuestFeed from "../pages/Quests/QuestFeed";
 export default function AppRoutes() {
   return (
     <Routes>
@@ -50,7 +50,7 @@ export default function AppRoutes() {
         
         <Route path="/social" element={<SocialFeed />} />
 
-        <Route path="/quests" element={<DiscoverQuests />} />
+        <Route path="/quests" element={<QuestFeed />} />
         <Route path="/quests/create" element={<CreateQuest />} />
         <Route path="/quests/:id" element={<QuestDetail />} />
         <Route path="/quests/:id/apply" element={<ApplyToQuest />} />
