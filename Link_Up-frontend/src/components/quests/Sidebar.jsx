@@ -52,7 +52,7 @@ const Sidebar = () => {
     },
     {
       name: "Search Quests",
-      path: "/search",
+      path: "/quests/search",
       icon: (isActive) => (
         <svg className={`w-5 h-5 transition-colors ${isActive ? 'text-[#FF6B47]' : 'text-gray-400 dark:text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
           <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-6-6m2-5a7 7 0 1 1-14 0 7 7 0 0 1 14 0z" />
@@ -60,7 +60,7 @@ const Sidebar = () => {
       )
     },
     {
-      name: "Play chess against the admin",
+      name: "Play chess against the admin(I'm average)",
       path: "/chess",
       icon: (isActive) => (
         <svg className={`w-5 h-5 transition-colors ${isActive ? 'text-[#FF6B47]' : 'text-gray-400 dark:text-gray-500'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">

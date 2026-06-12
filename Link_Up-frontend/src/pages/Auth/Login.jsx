@@ -2,40 +2,16 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { SocialButtons, AuthCard, ShootingStars } from '@/components/ui/login-1'
 import fullChar from '@/assets/images/full_resister_pg1.png'
+import peak5Png from '@/assets/images/peak5.png'
 import Button from '@/components/common/Button'
 import Input from '@/components/common/Input'
 import useAuthStore from '@/store/auth.store'
-
-const LOGIN_RIGHT_PANEL = (
-    <div style={{
-        position: 'relative',
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'flex-end',
-        justifyContent: 'center',
-    }}>
-        <img
-            src={fullChar}
-            alt="Character"
-            style={{
-                position: 'absolute',
-                bottom: 0,
-                left: '50%',
-                transform: 'translateX(-50%)',
-                height: '95%',
-                objectFit: 'contain',
-                filter: 'drop-shadow(0 8px 28px rgba(0,0,0,0.55))',
-                zIndex: 2,
-            }}
-        />
-    </div>
-)
 
 export default function Login() {
     const [form, setForm] = useState({ email: '', password: '' })
     const [showPass, setShowPass] = useState(false)
     const [localError, setLocalError] = useState('')
+    const [showPeak, setShowPeak] = useState(false)
     const navigate = useNavigate()
 
     const login = useAuthStore(state => state.login)
@@ -72,6 +48,87 @@ export default function Login() {
         </button>
     )
 
+    const rightPanel = !showPeak ? (
+        <div 
+            onClick={() => setShowPeak(true)}
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'flex-end',
+                justifyContent: 'center',
+                cursor: 'pointer',
+            }}
+        >
+            <img
+                src={fullChar}
+                alt="Character"
+                style={{
+                    position: 'absolute',
+                    bottom: 0,
+                    left: '50%',
+                    transform: 'translateX(-50%)',
+                    height: '95%',
+                    objectFit: 'contain',
+                    filter: 'drop-shadow(0 8px 28px rgba(0,0,0,0.55))',
+                    zIndex: 2,
+                }}
+            />
+        </div>
+    ) : (
+        <div 
+            onClick={() => setShowPeak(false)}
+            style={{
+                position: 'relative',
+                width: '100%',
+                height: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                padding: '24px',
+            }}
+        >
+            <img
+                src={peak5Png}
+                alt="Mount Dhaulagiri"
+                style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    objectPosition: 'center center',
+                    zIndex: 2,
+                    borderRadius: '12px',
+                    filter: 'drop-shadow(0 8px 28px rgba(0,0,0,0.35))',
+                }}
+            />
+            <div style={{
+                position: 'absolute',
+                bottom: '40px',
+                left: '50%',
+                transform: 'translateX(-50%)',
+                zIndex: 3,
+                background: 'rgba(20, 20, 18, 0.75)',
+                backdropFilter: 'blur(8px)',
+                padding: '8px 20px',
+                borderRadius: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.15)',
+                boxShadow: '0 4px 20px rgba(0, 0, 0, 0.2)',
+                textAlign: 'center',
+            }}>
+                <span style={{
+                    color: '#F0EEE9',
+                    fontSize: '15px',
+                    fontWeight: '600',
+                    letterSpacing: '0.5px',
+                }}>
+                    Mount Dhaulagiri
+                </span>
+            </div>
+        </div>
+    )
+
     return (
         <div
             className="min-h-screen flex items-center justify-center p-6 relative"
@@ -80,7 +137,7 @@ export default function Login() {
             }}
         >
             <ShootingStars />
-            <AuthCard rightPanel={LOGIN_RIGHT_PANEL}>
+            <AuthCard rightPanel={rightPanel}>
                 <form onSubmit={handleSubmit} className="flex flex-col gap-5" noValidate>
                     {/* Header */}
                     <div className="text-center mb-2">

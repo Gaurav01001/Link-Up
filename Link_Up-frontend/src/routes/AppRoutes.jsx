@@ -11,11 +11,9 @@ import ForgotPassword from "../pages/Auth/ForgotPassword";
 import ResetPassword from "../pages/Auth/ResetPassword";
 
 // Protected Pages
-import DiscoverQuests from "../pages/Quests/DiscoverQuests";
+// import DiscoverQuests from "../quests/Quests/DiscoverQuests";
 import SocialFeed from "../pages/Feed/SocialFeed";
-import CreateQuest from "../pages/Quests/CreateQuest";
-import QuestDetail from "../pages/Quests/QuestDetail";
-import ApplyToQuest from "../pages/Quests/ApplyToQuest";
+
 import ApplicationsDashboard from "../pages/Applications/ApplicationsDashboard";
 import MyApplications from "../pages/Applications/MyApplications";
 import Messages from "../pages/Messages/Messages";
@@ -24,7 +22,11 @@ import EditProfile from "../pages/Profile/EditProfile";
 import Search from "../pages/Search/Search";
 import Notifications from "../pages/Notifications/Notifications";
 import Feed from "../pages/Feed/Feed";
-import QuestFeed from "../pages/Quests/QuestFeed";
+
+import CreateQuest from "../components/quests/Quests/CreateQuest";
+import QuestDetail from "../components/quests/Quests/QuestDetail";
+import ApplyToQuest from "../components/quests/Quests/ApplyToQuest";
+import QuestFeed from "../components/quests/Quests/QuestFeed";
 export default function AppRoutes() {
   return (
     <Routes>
