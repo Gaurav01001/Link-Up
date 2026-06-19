@@ -1,1 +1,9 @@
-export default function ApplyToQuest() { return null; }
+import React from 'react'
+
+const ApplyToQuest = () => {
+  return (
+    <div>ApplyToQuest</div>
+  )
+}
+
+export default ApplyToQuest
