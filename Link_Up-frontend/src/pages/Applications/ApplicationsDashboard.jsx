@@ -1,23 +1,19 @@
 // ApplicationsDashboard.jsx — Host Control Panel to Manage Incoming Applications
 //
 // DESIGN KEY FEATURES:
-// 1. Sleek Glassmorphism Card Deck: Standardized with rounded corners and bottom animated border highlights.
-// 2. Clear Tabs Switcher: Allows filtering incoming applications by status (Pending, Accepted, Rejected) with dynamic count badges.
-// 3. Informative Summary Metrics: Visually maps general counts at the top (Total Quests, Pending, Accepted).
-// 4. Action CTA Buttons: Host can instantly Accept or Reject applications with direct visual feedback and loading animations.
-//
-// API INTEGRATION DETAILS:
-// 1. Queries GET /roles to fetch quests, filters for ones created by logged-in user.
-// 2. Queries GET /roles/:id/applications for each created quest to aggregate incoming applicants.
-// 3. Connects action buttons to PATCH /applications/:id with raw status updates (ACCEPTED, REJECTED).
+// 1. Consistent App Background: Uses min-h-screen bg-[#FAFAF8] dark:bg-[#141412] matching Link Up design system.
+// 2. Sleek Glassmorphism Card Deck: Standardized white/dark cards with rounded corners and border accents.
+// 3. Clear Tabs Switcher: Filter incoming applications by status (Pending, Accepted, Rejected) with dynamic count badges.
+// 4. Summary Metrics Cards: Visually maps counts at the top (Your Quests, Pending Reviews, Accepted, Rejected).
+// 5. Action CTA Buttons: Host can Accept or Reject applications with direct visual feedback.
 
-import React, { useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Navbar } from '../../components/layout/Navbar'
-import Sidebar from '../../components/quests/Sidebar'
-import Button from '../../components/common/Button'
-import api from '../../api/axios'
-import useAuthStore from '../../store/auth.store'
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Navbar } from '../../components/layout/Navbar';
+import Sidebar from '../../components/quests/Sidebar';
+import Button from '../../components/common/Button';
+import api from '../../api/axios';
+import useAuthStore from '../../store/auth.store';
 
 const ApplicationsDashboard = () => {
   const navigate = useNavigate();
@@ -135,13 +131,13 @@ const ApplicationsDashboard = () => {
               Applications Dashboard
             </h1>
             <p className="text-sm text-[#6B6860] dark:text-[#9E9B95] mt-1.5">
-              Review and manage applicants requesting to join your active side quests.
+              Review and manage applicants rest of the features idk when ill make.
             </p>
           </div>
 
           {/* Aggregated Metric Cards Row */}
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 mb-8">
-            <div className="bg-white dark:bg-[#1E1E1B] p-4 rounded-[16px] border border-[#E8E6E1] dark:border-[#312F2C] shadow-xs">
+            <div className="bg-white dark:bg-[#1E1E1B] p-4 rounded-[16px] border border-[#E8E6E1] dark:border-[#312F2C] shadow-xs border-l-4 border-l-[#FF6B47]">
               <span className="block text-[10px] uppercase font-bold text-[#6B6860] dark:text-[#9E9B95] tracking-wider mb-1">
                 Your Quests
               </span>
@@ -370,9 +366,7 @@ const ApplicationsDashboard = () => {
         </main>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default ApplicationsDashboard
-
-
+export default ApplicationsDashboard;
