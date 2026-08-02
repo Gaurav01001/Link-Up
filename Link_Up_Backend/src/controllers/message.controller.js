@@ -1,18 +1,22 @@
-const { sendMessage: sendMessageService, getConversation } = require("../services/message.service")
+const {
+  sendMessage: sendMessageService,
+  getConversation,
+  getConversations: getConversationsService
+} = require("../services/message.service");
 
 const sendMessage = async (req, res) => {
-    try {
-        const senderId = req.user.id;
-        //🔹 senderId
-        //Comes from authenticated JWT user.
+  try {
+    const senderId = req.user.id;
+    //🔹 senderId
+    //Comes from authenticated JWT user.
 
-        const { receiverId, content } = req.body;
-        const message = await sendMessageService(senderId, receiverId, content);
-        res.status(201).json({
-  success: true,
-  message: "Message sent successfully",
-  data: message,
-});
+    const { receiverId, content } = req.body;
+    const message = await sendMessageService(senderId, receiverId, content);
+    res.status(201).json({
+      success: true,
+      message: "Message sent successfully",
+      data: message,
+    });
   } catch (error) {
 
     res.status(400).json({
@@ -54,8 +58,27 @@ const getConversationMessages =
       });
 
     }
-};
+  };
+
+const getConversations = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const conversations = await getConversationsService(userId);
+    return res.status(200).json({
+      success: true,
+      message: "conversation fetched successfully",
+      data: conversations
+    })
+  } catch (error) {
+    return res.status(500).json({
+      success: false,
+      message: error.message,
+    })
+
+  }
+}
 module.exports = {
-    sendMessage,
-    getConversationMessages
+  sendMessage,
+  getConversationMessages,
+  getConversations
 }

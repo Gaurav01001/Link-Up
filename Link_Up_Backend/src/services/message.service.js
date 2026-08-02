@@ -52,7 +52,24 @@ const getConversation = async (userId, targetUserId) => {
         });
     return messages;
 }
+
+const getConversations = async(userId) =>{
+    const conversation = await prisma.message.findMany({
+        where:{
+           OR:[
+            {senderId:userId},
+            {receiverId:userId}
+        ]
+        },
+        include:{
+            sender:true,
+            receiver:true
+        }
+    })
+    return conversation;
+}
 module.exports = {
     sendMessage,
-    getConversation
+    getConversation,
+    getConversations
 }
