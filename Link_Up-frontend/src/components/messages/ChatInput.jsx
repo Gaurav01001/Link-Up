@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../api/axios';
-import { useFetcher } from 'react-router-dom';
-
-const ChatInput = ({selectedConvo}) => {
+// import { useFetcher } from 'react-router-dom';
+// import {getSocket} from '../../api/socket';
+// import useAuthStore from '../../store/auth.store';
+const ChatInput = ({ selectedConvo, onMessageSent }) => {
   const[message, setMessage] = useState(""); 
   const[placeholder , setPlaceholder] = useState("");
+  // const user = useAuthStore((state)=>state.user);
 
   useEffect(()=>{
     let  index = 0;
@@ -50,13 +52,21 @@ const ChatInput = ({selectedConvo}) => {
     if (message.trim() === "") return;
 
     try {
-
+const response = 
         await api.post("/messages", {
             receiverId: selectedConvo.id,
             content: message,
         });
-
+// const socket = getSocket();
+// socket.emit("send_message",{
+//   senderId: user.id,
+//   receiverId: selectedConvo.id,
+//   content: message,
+// })
         setMessage("");
+        if(onMessageSent && response.data?.data){
+          onMessageSent(response.data.data);
+        }
 
     } catch (error) {
 

@@ -1,27 +1,26 @@
 import React from 'react'
+import { useState, useEffect } from 'react';
+import api from '../../api/axios';
 
-const conversation = [
-  {
-    id: 1,
-    name: "Alice",
-    lastMessage: "Hey! Are you free?",
-  },
-  {
-    id: 2,
-    name: "John",
-    lastMessage: "I accepted your quest.",
-  },
-  {
-    id: 3,
-    name: "Rahul",
-    lastMessage: "Let's build together.",
+
+ 
+const ConversationList = ({ onSelectConversation, selectedId, refreshKey }) => {
+   const [conversations, setConversations] = useState([]);
+
+  useEffect(()=>{
+    const fetconversation = async()=>{
+    try {
+      const response = await api.get("/messages/conversations")
+      setConversations(response.data.data);
+    } catch (error) {
+      console.error(error);
+    }
   }
-]
-
-const ConversationList = ({ onSelectConversation, selectedId }) => {
+  fetconversation();
+},[refreshKey]);
   return (
     <div className="space-y-2">
-      {conversation.map((e) => {
+      {conversations.map((e) => {
         const isSelected = selectedId === e.id;
         return (
           <div 

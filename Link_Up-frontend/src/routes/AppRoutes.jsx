@@ -32,43 +32,40 @@ export default function AppRoutes() {
     <Routes>
 
       {/* Public Landing Page */}
-      <Route path="/" element={<LandingPage />} />
+{/* Public Landing */}
+<Route path="/" element={<LandingPage />} />
 
-      {/* Public Auth Routes */}
-      <Route element={<PublicRoute />}>
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/forgot-password" element={<ForgotPassword />} />
-        <Route path="/reset-password" element={<ResetPassword />} />
-      </Route>
+{/* Public browsing + auth */}
+<Route path="/feed" element={<Feed />} />
+<Route path="/quests" element={<QuestFeed />} />
+<Route path="/quests/:id" element={<QuestDetail />} />
+<Route path="/profile/:username" element={<Profile />} />
+<Route path="/search" element={<Search />} />
+{/* Public Auth Routes */}
+<Route element={<PublicRoute />}>
+  <Route path="/login" element={<Login />} />
+  <Route path="/register" element={<Register />} />
+  <Route path="/forgot-password" element={<ForgotPassword />} />
+  <Route path="/reset-password" element={<ResetPassword />} />
+</Route>
 
-      {/* Protected Routes */}
-      <Route element={<ProtectedRoute />}>
-        {/* Feed redirects to discover quests as requested in the design change /feed → DiscoverQuests */}
-        <Route path="/feed" element={<Feed />} />
+{/* Protected Routes */}
+<Route element={<ProtectedRoute />}>
+  <Route path="/social" element={<SocialFeed />} />
 
-        {/* <Route path="/feed" element={<DiscoverQuests />} /> */} 
-        
-        
-        <Route path="/social" element={<SocialFeed />} />
+  <Route path="/quests/create" element={<CreateQuest />} />
+  <Route path="/quests/:id/apply" element={<ApplyToQuest />} />
+  <Route path="/applications" element={<ApplicationsDashboard />} />
+  <Route path="/applications/my" element={<MyApplications />} />
 
-        <Route path="/quests" element={<QuestFeed />} />
-        <Route path="/quests/create" element={<CreateQuest />} />
-        <Route path="/quests/:id" element={<QuestDetail />} />
-        <Route path="/quests/:id/apply" element={<ApplyToQuest />} />
+  <Route path="/messages" element={<Messages />} />
+  <Route path="/messages/:id" element={<Messages />} />
 
-        <Route path="/applications" element={<ApplicationsDashboard />} />
-        <Route path="/applications/my" element={<MyApplications />} />
+  <Route path="/profile/edit" element={<EditProfile />} />
 
-        <Route path="/messages" element={<Messages />} />
-        <Route path="/messages/:id" element={<Messages />} />
 
-        <Route path="/profile/edit" element={<EditProfile />} />
-        <Route path="/profile/:username" element={<Profile />} />
-
-        <Route path="/search" element={<Search />} />
-        <Route path="/notifications" element={<Notifications />} />
-      </Route>
+  <Route path="/notifications" element={<Notifications />} />
+</Route>
 
       {/* 404 */}
       <Route path="*" element={<h1>404 Not Found</h1>} />

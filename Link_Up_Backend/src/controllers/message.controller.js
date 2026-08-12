@@ -12,6 +12,13 @@ const sendMessage = async (req, res) => {
 
     const { receiverId, content } = req.body;
     const message = await sendMessageService(senderId, receiverId, content);
+
+    const io = req.app.get('io');
+    const onlineUsers = req.app.get('onlineUsers');
+    const receiverSocketId = onlineUsers[receiverId];
+    if(receiverSocketId){
+      io.to(receiverSocketId).emit('receive_message', message);
+    }
     res.status(201).json({
       success: true,
       message: "Message sent successfully",

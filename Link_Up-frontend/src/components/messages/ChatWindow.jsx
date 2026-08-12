@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import api from '../../api/axios';
 import MessageBubble from './MessageBubble';
+import {getSocket} from '../../api/socket';
 
-const ChatWindow = ({ selectedConvo }) => {
+const ChatWindow = ({ selectedConvo, refreshKey }) => {
   const [messages, setMessages] = useState([]);
   
   useEffect(() => {
@@ -11,12 +12,49 @@ const ChatWindow = ({ selectedConvo }) => {
     }
     api.get(`/messages/${selectedConvo.id}`)
       .then(response => {
-setMessages(response.data.data || []);      })
+setMessages(response.data.data || 
+  []);
+      })
       .catch(error => {
         console.error("Error fetching messages:", error);
-      })
-  }, [selectedConvo]);
+      });
+  }, [selectedConvo, refreshKey]);
 
+      useEffect(()=>{
+        const socket = getSocket();
+const handleReceiveMessage = (message) => {
+  setMessages((prevMessages) => [
+    ...prevMessages,
+    message
+  ]);
+};
+
+socket.on("receive_message", handleReceiveMessage);
+
+return () => {
+  socket.off("receive_message", handleReceiveMessage);
+};
+      },[]);
+      /*
+   ChatInput
+   ↓
+POST /messages
+   ↓
+Database ✅
+   ↓
+socket.emit("send_message")
+   ↓
+server.js
+   ↓
+socket.emit("receive_message")
+   ↓
+ChatWindow listener
+   ↓
+setMessages(...)
+   ↓
+MessageBubble appears
+   ↓
+UI updates automatically*/
   if (!selectedConvo) {
     return (
       <div className="h-full flex flex-col items-center justify-center p-8 text-center my-auto">

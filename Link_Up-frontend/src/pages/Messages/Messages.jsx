@@ -34,16 +34,30 @@ import ChatWindow from '../../components/messages/ChatWindow'
 import ConversationList from '../../components/messages/ConversationList'
 import ChatInput from '../../components/messages/ChatInput'
 import { useEffect, useState } from 'react'
+import { useLocation } from 'react-router-dom'
+
 const Messages = () => {
-  
-    const[selectedConvos, setselectedConvos] = useState(null);
-   
+
+  const[refreshKey, setRefreshKey] = useState(0);
+
+  const handleMessageSent = (newMessage)=>{
+    setRefreshKey(prev=>prev+1);
+  };
+
+  const[selectedConvos, setselectedConvos] = useState(null);
+    const location = useLocation();
+    const creator = location.state?.user;
+
+useEffect(() => {
+    if (creator) {
+        setselectedConvos(creator);
+    }
+}, [creator]);
   return (
     <div className="min-h-screen bg-[#FAFAF8] dark:bg-[#141412] text-[#1A1916] dark:text-[#F0EEE9] transition-colors duration-200">
       <Navbar />
       <div className="flex">
         <Sidebar />
-
         {/* Main Content Area */}
         <main className="flex-1 flex gap-4 h-[calc(100vh-68px)] p-4 max-w-7xl mx-auto overflow-hidden">
           
@@ -68,6 +82,7 @@ const Messages = () => {
               <ConversationList
                 onSelectConversation={setselectedConvos}
                 selectedId={selectedConvos?.id}
+                refreshKey={refreshKey}
               />
             </div>
           </div>
@@ -105,15 +120,13 @@ const Messages = () => {
 
             {/* Chat Body Window */}
             <div className="flex-1 overflow-y-auto bg-[#FAFAF8]/50 dark:bg-[#141412]/50">  
-              <ChatWindow selectedConvo={selectedConvos}/>
-            </div>
+<ChatWindow selectedConvo={selectedConvos} refreshKey={refreshKey} />            </div>
 
             {/* Message Input Footer */}
             <div className="p-3 border-t border-[#E8E6E1] dark:border-[#312F2C] bg-white dark:bg-[#1E1E1B]">
-              <ChatInput selectedConvo={selectedConvos}/>
-            </div>
+<ChatInput selectedConvo={selectedConvos} onMessageSent={handleMessageSent} />            </div>
 
-          </div>
+          </div> 
 
         </main>
       </div>

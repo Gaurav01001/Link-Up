@@ -53,21 +53,41 @@ const getConversation = async (userId, targetUserId) => {
     return messages;
 }
 
-const getConversations = async(userId) =>{
-    const conversation = await prisma.message.findMany({
-        where:{
-           OR:[
-            {senderId:userId},
-            {receiverId:userId}
-        ]
+const getConversations = async (userId) => {
+    const messages = await prisma.message.findMany({
+        where: {
+            OR: [
+                { senderId: userId },
+                { receiverId: userId }
+            ]
         },
-        include:{
-            sender:true,
-            receiver:true
+        orderBy: {
+            createdAt: "desc"
+        },
+        include: {
+            sender: true,
+            receiver: true
         }
-    })
-    return conversation;
-}
+    });
+    const conversationMap = new Map();
+    for (const msg of messages) {
+        // Determine the other user in the conversation
+        const otherUser = msg.senderId === userId ? msg.receiver : msg.sender;
+        if (!otherUser) continue;
+        // Keep only the newest message per unique partner
+        if (!conversationMap.has(otherUser.id)) {
+            conversationMap.set(otherUser.id, {
+                id: otherUser.id,
+                name: otherUser.name || otherUser.username,
+                username: otherUser.username,
+                avatar: otherUser.avatar,
+                lastMessage: msg.content,
+                updatedAt: msg.createdAt
+            });
+        }
+    }
+    return Array.from(conversationMap.values());
+};
 module.exports = {
     sendMessage,
     getConversation,

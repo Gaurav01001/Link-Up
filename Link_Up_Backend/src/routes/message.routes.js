@@ -21,6 +21,7 @@ const {
 const {
   sendMessage,
   getConversationMessages,
+  getConversations,
 } = require(
   "../controllers/message.controller"
 );
@@ -31,6 +32,13 @@ router.post(
   validate(sendMessageSchema),
   sendMessage
 );
+
+router.get(
+  "/conversations",
+  authentication,
+  getConversations
+)
+
 
 router.get(
   "/:userId",

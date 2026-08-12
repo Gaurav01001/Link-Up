@@ -1,8 +1,10 @@
 import React from 'react'
-
+import useAuthStore from '../../store/auth.store';
 const MessageBubble = ({ message }) => {
+  const user = useAuthStore((state)=>state.user)
+    const isMine = message.senderId == user?.id;
   // Safe extraction of message content and sender alignment
-  const isMine = message.isMine || message.senderId === 'me' || false;
+  // const isMine = message.isMine || message.senderId === 'me' || false;
   const messageText = typeof message === 'string' ? message : (message.content || message.text || '');
 
   return (

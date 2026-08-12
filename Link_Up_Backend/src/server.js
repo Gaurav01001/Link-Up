@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const app = require("./app");
@@ -15,63 +16,92 @@ const server =
 
 const io = new Server(server, {
   cors: {
-    origin: "*",
+    origin: process.env.FRONTEND_URL || "http://localhost:5173",
   },
 });
-
+const jwt = require("jsonwebtoken");
+io.use((socket, next) => {
+  const token = socket.handshake.auth?.token;
+  if (!token) {
+    return next(new Error("Authentication Required"));
+  }
+  try {
+    const decode = jwt.verify(token, process.env.JWT_SECRET);
+    socket.userID = decode.id;
+    next();
+  } catch (err) {
+    return next(new Error("Invalid or Expiered Token"));
+  }
+})
 const onlineUsers = {};
+app.set('io', io);
+app.set('onlineUsers', onlineUsers);
 
 io.on("connection", (socket) => {
 
   console.log("User connected");
 
   // user joins
-  socket.on("join", (userId) => {
+  // Use the verified userId from JWT — no client input needed
+  onlineUsers[socket.userId] = socket.id;
+  console.log("User joined:", socket.userId);
 
-    onlineUsers[userId] =
-      socket.id;
-
-    console.log(
-      "User joined:",
-      userId
-    );
-
-  });
-
+  // You don't need any send_message listener in server.js anymore.
+  /* 
+  connect
+     ↓
+  join(userId)
+     ↓
+  onlineUsers[userId] = socket.id
+     ↓
+  disconnect → remove user
+  
+  And your controller handles message delivery:
+  
+  POST /messages
+       ↓
+  message.service
+       ↓
+  Prisma saves message
+       ↓
+  controller gets saved message
+       ↓
+  io.to(receiverSocketId)
+       ↓
+  "receive_message"
+  */
   // realtime messaging
-  socket.on(
-    "send_message",
-    (data) => {
+  // socket.on(
+  //   "send_message", async (data) => {
 
-      const {
-        senderId,
-        receiverId,
-        content,
-      } = data;
+  //     const {
+  //       senderId,
+  //       receiverId,
+  //       content,
+  //     } = data;
+  //     // const message = await prisma.message.create({
+  //     //   data: {
+  //     //     senderId,
+  //     //     receiverId,
+  //     //     content,
+  //     //   }
+  //     // });
+  //     const receiverSocketId =
+  //       onlineUsers[receiverId];
 
-      const receiverSocketId =
-        onlineUsers[receiverId];
+  //     console.log(
+  //       receiverSocketId
+  //     );
 
-      console.log(
-        receiverSocketId
-      );
+  //     // send to receiver
+  //     if (receiverSocketId) {
 
-      // send to receiver
-      if (receiverSocketId) {
+  //       io.to(receiverSocketId).emit("receive_message", message);
 
-        io.to(receiverSocketId)
-          .emit(
-            "receive_message",
-            {
-              senderId,
-              content,
-            }
-          );
+  //     }
 
-      }
-
-    }
-  );
+  //   }
+  // );
 
   socket.on("disconnect", () => {
 

@@ -41,7 +41,7 @@ export function HeroSection({
 
     const handlePrimary = () => {
         if (onPrimaryClick) onPrimaryClick()
-        else navigate("/register")
+        else navigate("/feed")
     }
     const handleSecondary = () => {
         if (onSecondaryClick) onSecondaryClick()

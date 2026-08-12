@@ -142,7 +142,7 @@ const requestPasswordReset = async (email) => {
         }
     });
 
-    const resetUrl = `http://localhost:5173/reset-password?token=${resetToken}`;
+const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}`;
     console.log(`[PASSWORD RESET LINK for ${email}]: ${resetUrl}`);
 
     await sendResetEmail(email, resetUrl);

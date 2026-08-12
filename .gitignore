@@ -1,1 +1,28 @@
 node_modules/
+ChatInput
+   ↓
+POST /messages
+   ↓
+Express
+   ↓
+PostgreSQL
+   ↓
+Socket.IO emits "newMessage"
+   ↓
+Receiver's ChatWindow
+   ↓
+message appears instantly
+
+                 ┌──→ PostgreSQL
+ChatInput ──POST─┤
+                 │
+                 └──→ Controller
+                         │
+                         └──→ Socket.IO
+                                │
+                                ▼
+                           Receiver
+                                │
+                         ChatWindow
+                                │
+                         setMessages()

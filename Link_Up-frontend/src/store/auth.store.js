@@ -36,7 +36,7 @@ const useAuthStore = create((set, get) => ({
         error: null,
       });
 
-      connectSocket(data.user.id);
+      connectSocket();
 
       return data;
     } catch (error) {
@@ -71,7 +71,7 @@ const useAuthStore = create((set, get) => ({
         error: null,
       });
 
-      connectSocket(data.user.id);
+      connectSocket();
 
       return data;
     } catch (error) {
@@ -113,7 +113,7 @@ const useAuthStore = create((set, get) => ({
         loading: false,
       });
 
-      connectSocket(data.user.id);
+      connectSocket();
 
       return data.user;
     } catch (error) {

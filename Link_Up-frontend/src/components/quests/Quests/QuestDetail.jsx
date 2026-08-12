@@ -20,7 +20,7 @@ import api from '../../../api/axios'
 import useAuthStore from '../../../store/auth.store'
 
 const QuestDetail = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { id } = useParams();
   const currentUser = useAuthStore(state => state.user);
 
@@ -30,6 +30,8 @@ const QuestDetail = () => {
   const [error, setError] = useState("");
   const [hasApplied, setHasApplied] = useState(false);
   const [applying, setApplying] = useState(false);
+  const navigate = useNavigate();
+
 
   // Fetch quest data and user's application status on component mount
   useEffect(() => {
@@ -365,7 +367,18 @@ const QuestDetail = () => {
                     </span>
                   </div>
                 </div>
-
+                
+                <button
+                onClick={()=>
+                  navigate("/messages",{
+                    state:{
+                      user: quest.creator
+                    }
+                  })
+                }
+                className="w-full sm:w-auto px-8 py-3.5 rounded-[12px] font-bold text-sm shadow-sm transition-all duration-200 cursor-pointer outline-none bg-blue-500 text-white hover:bg-blue-600 hover:translate-y-[-1px] hover:shadow-md">
+                  message creator
+                </button>
                 {/* Right CTA Button */}
                 <button
                   disabled={isDisabled}
