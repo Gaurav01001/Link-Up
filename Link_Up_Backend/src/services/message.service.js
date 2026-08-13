@@ -65,8 +65,8 @@ const getConversations = async (userId) => {
             createdAt: "desc"
         },
         include: {
-            sender: true,
-            receiver: true
+            sender: { select: { id: true, name: true, username: true } },
+            receiver: { select: { id: true, name: true, username: true } }
         }
     });
     const conversationMap = new Map();

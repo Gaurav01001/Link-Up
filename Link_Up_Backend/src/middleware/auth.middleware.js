@@ -20,6 +20,17 @@ const authentication = async (req, res, next) => {
         const user = await prisma.user.findUnique({
             where: {
                 id: decoded.id
+            },
+            select:{
+                id: true,
+                name: true,
+                email: true,
+                username: true,
+                avatar: true,
+                bio: true,
+                location: true,
+                createdAt: true,
+                updatedAt: true
             }
         });
         if(!user){

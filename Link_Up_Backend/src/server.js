@@ -27,7 +27,7 @@ io.use((socket, next) => {
   }
   try {
     const decode = jwt.verify(token, process.env.JWT_SECRET);
-    socket.userID = decode.id;
+    socket.userId = decode.id;
     next();
   } catch (err) {
     return next(new Error("Invalid or Expiered Token"));

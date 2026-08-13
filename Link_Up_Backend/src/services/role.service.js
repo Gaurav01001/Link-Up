@@ -39,9 +39,10 @@ exports.getRoles = async () => {
     const roles = await prisma.role.findMany({
         where: {
             isActive: true,
-            deadline: {
-                gte: now,
-            },
+            OR: [
+                { deadline: { gte: now } },
+                { deadline: null },
+            ],
         },
         include: {
             creator: {
@@ -112,9 +113,10 @@ exports.updateRole = async (roleId, userId, data) => {
     if (role.creatorId !== userId) {
         throw new Error("Unauthorized");
     }
-    if (new Date(role.deadline) < new Date()) {
-  throw new Error("Role expired");
-}
+        if (role.deadline && new Date(role.deadline) < new Date()) {
+        throw new Error("Role expired");
+    }
+
 
     // 🔹 update role
     delete data.isActive;
@@ -141,11 +143,33 @@ exports.deleteRole = async(roleId, userId)=>{
         throw new Error("Unauthorized");
 
     }
-  if (new Date(role.deadline) < new Date()) {
-        throw new Error("Role already expired")
+      if (role.deadline && new Date(role.deadline) < new Date()) {
+        throw new Error("Role already expired");
     }
+
 return await prisma.role.update({
     where: { id: roleId },
     data: { isActive: false }
 });
 }
+
+exports.getMyRoles = async (creatorId) => {
+    const roles = await prisma.role.findMany({
+        where: { creatorId },
+        include: {
+            creator: {
+                select: {
+                    id: true,
+                    username: true,
+                    name: true,
+                    avatar: true,
+                },
+            },
+            _count: {
+                select: { applications: true },
+            },
+        },
+        orderBy: { createdAt: "desc" },
+    });
+    return roles;
+};

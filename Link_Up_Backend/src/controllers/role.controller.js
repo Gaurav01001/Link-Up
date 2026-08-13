@@ -7,7 +7,7 @@ Handles HTTP layer
 Talks to client
 
 */
-
+const { getMyRoles } = require("../services/role.service");
 const roleService = require("../services/role.service");
 const { createRoleSchema, updateRoleSchema } = require("../validators/role.validator");
 
@@ -120,10 +120,24 @@ const deleteRole = async (req, res) => {
         })
     }
 }
+
+const getMyRolesController = async (req, res) => {
+    try {
+        const roles = await roleService.getMyRoles(req.user.id);
+        res.status(200).json({ success: true, data: roles });
+    } catch (error) {
+        console.error(error);
+        res.status(400).json({
+            success: false,
+            message: error.message
+        })
+    }
+}
 module.exports = {
     createRole,
     getRoles,
     getRoleById,
     updateRole,
-    deleteRole
+    deleteRole,
+    getMyRolesController
 };

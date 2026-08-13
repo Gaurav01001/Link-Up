@@ -119,13 +119,29 @@ const updateApplicationStatus = async (applicationId, userId, status) => {
         })
 
         // Create connection between role creator and accepted applicant
-        await prisma.connection.create({
-            data: {
-                requesterId: application.role.creatorId,
-                receiverId: application.applicantId,
-                status: "ACCEPTED"
-            }
-        })
+                const existingConnection = await prisma.connection.findFirst({
+            where: {
+                OR: [
+                    {
+                        requesterId: application.role.creatorId,
+                        receiverId: application.applicantId,
+                    },
+                    {
+                        requesterId: application.applicantId,
+                        receiverId: application.role.creatorId,
+                    },
+                ],
+            },
+        });
+        if (!existingConnection) {
+            await prisma.connection.create({
+                data: {
+                    requesterId: application.role.creatorId,
+                    receiverId: application.applicantId,
+                    status: "ACCEPTED"
+                }
+            });
+        }
     }
 
     return updateApplication;

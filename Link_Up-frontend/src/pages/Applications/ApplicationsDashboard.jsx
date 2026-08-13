@@ -35,15 +35,15 @@ const ApplicationsDashboard = () => {
       setError("");
 
       // 1. Fetch all quests/roles
-      const rolesRes = await api.get('/roles');
+      const rolesRes = await api.get('/roles/my');
       if (rolesRes.data?.success) {
         const allRoles = rolesRes.data.data || [];
         
         // 2. Filter for quests created by the logged-in user
-        const myQuests = allRoles.filter(role => role.creatorId === currentUser.id);
-        setMyQuestCount(myQuests.length);
+        // const myQuests = allRoles.filter(role => role.creatorId === currentUser.id);
+        setMyQuestCount(allRoles.length);
 
-        if (myQuests.length === 0) {
+        if (allRoles.length === 0) {
           setApplications([]);
           setLoading(false);
           return;

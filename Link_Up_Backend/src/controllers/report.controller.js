@@ -72,7 +72,7 @@ const getReportsController =
     try {
 
       const reports =
-        await getReports();
+        await getReports(req.user.id);
 
       res.status(200).json({
 
@@ -110,7 +110,7 @@ const getReportByIdController =
 
       const report =
         await getReportById(
-          reportId
+          reportId , req.user.id
         );
 
       res.status(200).json({
@@ -149,7 +149,7 @@ const deleteReportController =
 
       const report =
         await deleteReport(
-          reportId
+          reportId , req.user.id
         );
 
       res.status(200).json({

@@ -3,11 +3,12 @@ const searchUsers = async (query, currentUserId) => {
     const users = await prisma.user.findMany({
         where: {
             OR: [
-                {name: {contains: query, mode: "insensitive"}},
-                {username: {contains: query, mode: "insensitive"}}
+                { name: { contains: query, mode: "insensitive" } },
+                { username: { contains: query, mode: "insensitive" } }
             ],
-            NOT: {id: currentUserId}
+            ...(currentUserId && { NOT: { id: currentUserId } })
         },
+
         select: {
             id: true,
             name: true,

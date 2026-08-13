@@ -20,21 +20,27 @@ setMessages(response.data.data ||
       });
   }, [selectedConvo, refreshKey]);
 
-      useEffect(()=>{
+       useEffect(()=>{
         const socket = getSocket();
-const handleReceiveMessage = (message) => {
-  setMessages((prevMessages) => [
-    ...prevMessages,
-    message
-  ]);
-};
+        if (!socket) return;
 
-socket.on("receive_message", handleReceiveMessage);
+        const handleReceiveMessage = (message) => {
+          // Only append if message belongs to the current conversation
+          if (message.senderId === selectedConvo?.id) {
+            setMessages((prevMessages) => [
+              ...prevMessages,
+              message
+            ]);
+          }
+        };
 
-return () => {
-  socket.off("receive_message", handleReceiveMessage);
-};
-      },[]);
+        socket.on("receive_message", handleReceiveMessage);
+
+        return () => {
+          socket.off("receive_message", handleReceiveMessage);
+        };
+      },[selectedConvo]);
+
       /*
    ChatInput
    ↓

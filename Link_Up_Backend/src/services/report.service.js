@@ -91,11 +91,13 @@ const createReport = async (
     return report;
 };
 
-const getReports = async () => {
+const getReports = async (userId) => {
 
     const reports =
         await prisma.report.findMany({
-
+            where: {
+                reportedId: userId
+            },
             include: {
 
                 reporter: {
@@ -129,7 +131,7 @@ const getReports = async () => {
     return reports;
 };
 
-const getReportById = async (id) => {
+const getReportById = async (id, userId) => {
 
     const report = await prisma.report.findUnique({
         where: {
@@ -162,10 +164,10 @@ const getReportById = async (id) => {
 
     });
 
-    if (!report) {
+    if (report.reportedId !== userId) {
 
         throw new Error(
-            "Report not found"
+            "You are not authorized to view this report"
         );
 
     }
@@ -174,7 +176,7 @@ const getReportById = async (id) => {
 };
 
 const deleteReport = async (
-    id
+    id , userId
 ) => {
 
     // check report exists
@@ -187,10 +189,10 @@ const deleteReport = async (
 
         });
 
-    if (!report) {
+    if (report.reportedId !== userId) {
 
         throw new Error(
-            "Report not found"
+            "You are not authorized to delete this report"
         );
 
     }
